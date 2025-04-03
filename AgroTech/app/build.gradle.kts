@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.agrosupport"
+    namespace = "com.example.agrotech"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.agrosupport"
+        applicationId = "com.example.agrotech"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -84,4 +84,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("script-runtime"))
 }
