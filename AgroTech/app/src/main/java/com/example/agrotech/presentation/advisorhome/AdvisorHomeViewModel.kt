@@ -3,22 +3,30 @@ package com.example.agrotech.presentation.advisorhome
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.agrotech.common.GlobalVariables
 import com.example.agrotech.common.Resource
+import com.example.agrotech.common.Routes
 import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.authentication.AuthenticationRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.data.repository.farmer.FarmerRepository // Importa el repositorio de farmers
+import com.example.agrotech.data.repository.notification.NotificationRepository
 import com.example.agrotech.domain.appointment.Appointment
+import com.example.agrotech.domain.authentication.AuthenticationResponse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class AdvisorHomeViewModel(
+    private val navController: NavController,
     private val advisorRepository: AdvisorRepository,
     private val appointmentRepository: AppointmentRepository,
     private val profileRepository: ProfileRepository,
-    private val farmerRepository: FarmerRepository
+    private val farmerRepository: FarmerRepository,
+    private val authenticationRepository: AuthenticationRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     var appointments by mutableStateOf<List<Appointment>>(emptyList())
@@ -30,6 +38,9 @@ class AdvisorHomeViewModel(
     var isLoading by mutableStateOf(true)
         private set
 
+    private val _expanded = mutableStateOf(false)
+    val expanded: State<Boolean> get() = _expanded
+
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
@@ -38,6 +49,18 @@ class AdvisorHomeViewModel(
 
     var farmerNames by mutableStateOf<Map<Long, String>>(emptyMap())
         private set
+
+    private val _notificationCount = mutableStateOf(0)
+    val notificationCount: State<Int> get() = _notificationCount
+
+    fun getNotificationCount() {
+        viewModelScope.launch {
+            val result = notificationRepository.getNotifications(GlobalVariables.USER_ID, GlobalVariables.TOKEN)
+            if (result is Resource.Success) {
+                _notificationCount.value = result.data?.size ?: 0
+            }
+        }
+    }
 
     fun loadData() {
         viewModelScope.launch {
@@ -119,9 +142,33 @@ class AdvisorHomeViewModel(
     private suspend fun fetchAdvisorName(userId: Long) {
         val profileResult = profileRepository.searchProfile(userId, GlobalVariables.TOKEN)
         if (profileResult is Resource.Success) {
-            advisorName = profileResult.data?.firstName + " " + profileResult.data?.lastName
+            advisorName = profileResult.data?.firstName
         } else {
             errorMessage = profileResult.message
         }
+    }
+
+    fun signOut() {
+        GlobalVariables.ROLES = emptyList()
+        viewModelScope.launch {
+            val authResponse = AuthenticationResponse(
+                id = GlobalVariables.USER_ID,
+                username = "",
+                token = GlobalVariables.TOKEN
+            )
+            authenticationRepository.deleteUser(authResponse)
+            goToWelcomeSection()
+        }
+    }
+
+    fun setExpanded(value: Boolean) {
+        _expanded.value = value
+    }
+
+    private fun goToWelcomeSection() {
+        navController.navigate(Routes.Welcome.route)
+    }
+    fun goToNotificationList() {
+        navController.navigate(Routes.NotificationList.route)
     }
 }

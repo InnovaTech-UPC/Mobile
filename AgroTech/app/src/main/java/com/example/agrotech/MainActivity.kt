@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
                 val forgotPasswordViewModel = ForgotPasswordViewModel(navController)
                 val restorePasswordViewModel = RestorePasswordViewModel(navController)
                 val farmerHomeViewModel = FarmerHomeViewModel(navController, profileRepository, authenticationRepository, appointmentRepository, farmerRepository, advisorRepository, notificationRepository)
-                val advisorHomeViewModel = AdvisorHomeViewModel(advisorRepository, appointmentRepository, profileRepository, farmerRepository)
+                val advisorHomeViewModel = AdvisorHomeViewModel(navController, advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
                 val advisorListViewModel = AdvisorListViewModel(navController, profileRepository, advisorRepository)
                 val advisorDetailViewModel = AdvisorDetailViewModel(navController, profileRepository, advisorRepository, availableDateRepository)
                 val reviewListViewModel = ReviewListViewModel(navController, reviewRepository, profileRepository, farmerRepository, advisorRepository)
