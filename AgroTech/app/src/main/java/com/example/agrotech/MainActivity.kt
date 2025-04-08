@@ -1,4 +1,3 @@
-// MainActivity.kt
 package com.example.agrotech
 
 import android.os.Bundle
@@ -33,6 +32,8 @@ import com.example.agrotech.data.repository.profile.CloudStorageRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailScreen
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailViewModel
+import com.example.agrotech.presentation.advisorhome.AdvisorHomeScreen
+import com.example.agrotech.presentation.advisorhome.AdvisorHomeViewModel
 import com.example.agrotech.presentation.advisorlist.AdvisorListScreen
 import com.example.agrotech.presentation.advisorlist.AdvisorListViewModel
 import com.example.agrotech.presentation.farmerappointmentdetail.CancelAppointmentSuccessScreen
@@ -120,10 +121,11 @@ class MainActivity : ComponentActivity() {
 
                 // View Models
                 val welcomeViewModel = WelcomeViewModel(navController, authenticationRepository)
-                val loginViewModel = LoginViewModel(navController, authenticationRepository)
+                val loginViewModel = LoginViewModel(navController, authenticationRepository, advisorRepository)
                 val forgotPasswordViewModel = ForgotPasswordViewModel(navController)
                 val restorePasswordViewModel = RestorePasswordViewModel(navController)
                 val farmerHomeViewModel = FarmerHomeViewModel(navController, profileRepository, authenticationRepository, appointmentRepository, farmerRepository, advisorRepository, notificationRepository)
+                val advisorHomeViewModel = AdvisorHomeViewModel(advisorRepository, appointmentRepository, profileRepository, farmerRepository)
                 val advisorListViewModel = AdvisorListViewModel(navController, profileRepository, advisorRepository)
                 val advisorDetailViewModel = AdvisorDetailViewModel(navController, profileRepository, advisorRepository, availableDateRepository)
                 val reviewListViewModel = ReviewListViewModel(navController, reviewRepository, profileRepository, farmerRepository, advisorRepository)
@@ -156,6 +158,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.FarmerHome.route) {
                         FarmerHomeScreen(viewModel = farmerHomeViewModel)
+                    }
+                    composable(route = Routes.AdvisorHome.route) {
+                        AdvisorHomeScreen(viewModel = advisorHomeViewModel)
                     }
                     composable(route = Routes.AdvisorList.route) {
                         AdvisorListScreen(viewModel = advisorListViewModel)

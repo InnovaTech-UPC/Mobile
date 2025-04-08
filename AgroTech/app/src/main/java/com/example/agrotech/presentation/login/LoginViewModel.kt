@@ -9,13 +9,15 @@ import com.example.agrotech.common.GlobalVariables
 import com.example.agrotech.common.Resource
 import com.example.agrotech.common.Routes
 import com.example.agrotech.common.UIState
+import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.authentication.AuthenticationRepository
 import com.example.agrotech.domain.authentication.AuthenticationResponse
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val navController: NavController,
-    private val authenticationRepository: AuthenticationRepository
+    private val authenticationRepository: AuthenticationRepository,
+    private val advisorRepository: AdvisorRepository
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UIState<Unit>())
@@ -30,6 +32,7 @@ class LoginViewModel(
     private val _isPasswordVisible = mutableStateOf(false)
     val isPasswordVisible: State<Boolean> get() = _isPasswordVisible
 
+
     fun signIn() {
         _state.value = UIState(isLoading = true)
         viewModelScope.launch {
@@ -41,7 +44,7 @@ class LoginViewModel(
                     _state.value = UIState(isLoading = false)
 
                     if (GlobalVariables.TOKEN.isNotBlank() && GlobalVariables.USER_ID != 0L) {
-                        //Se guarda el usuario en la base de datos local para loguearlo automaticamente
+                        // Save the user in the local database for automatic login
                         authenticationRepository.insertUser(
                             AuthenticationResponse(
                                 id = GlobalVariables.USER_ID,
@@ -51,7 +54,15 @@ class LoginViewModel(
                         )
                         _email.value = ""
                         _password.value = ""
-                        goToFarmerScreen()
+
+                        // Check if the user is an advisor
+                        val isAdvisor = advisorRepository.isUserAdvisor(GlobalVariables.USER_ID, GlobalVariables.TOKEN)
+
+                        if (isAdvisor) {
+                            goToAdvisorScreen()
+                        } else {
+                            goToFarmerScreen()
+                        }
                     } else {
                         _state.value = UIState(message = "Error al iniciar sesión")
                     }
@@ -77,6 +88,10 @@ class LoginViewModel(
 
     fun goToForgotPasswordScreen() {
         navController.navigate(Routes.ForgotPassword.route)
+    }
+
+    private fun goToAdvisorScreen() {
+        navController.navigate(Routes.AdvisorHome.route)
     }
 
     private fun goToFarmerScreen() {

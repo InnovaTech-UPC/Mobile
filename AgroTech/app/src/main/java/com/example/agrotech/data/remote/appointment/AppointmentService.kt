@@ -23,6 +23,9 @@ interface AppointmentService {
     suspend fun getAppointmentsByFarmer(@Query("farmerId") farmerId: Long, @Header("Authorization") token: String): Response<List<AppointmentDto>>
 
     @GET("appointments")
+    suspend fun getAppointmentsByAdvisor(@Query("advisorId") advisorId: Long, @Header("Authorization") token: String): Response<List<AppointmentDto>>
+
+    @GET("appointments")
     suspend fun getAppointmentsByAdvisorAndFarmer(@Query("advisorId") advisorId: Long, @Query("farmerId") farmerId: Long, @Header("Authorization") token: String): Response<List<AppointmentDto>>
 
     @POST("appointments")

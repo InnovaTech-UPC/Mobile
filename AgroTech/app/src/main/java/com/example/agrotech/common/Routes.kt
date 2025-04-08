@@ -2,6 +2,7 @@ package com.example.agrotech.common
 
 sealed class Routes(val route: String) {
     data object FarmerHome : Routes("FarmerHome")
+    data object AdvisorHome : Routes("AdvisorHome")
     data object AdvisorList : Routes("AdvisorList")
     data object AdvisorDetail : Routes("AdvisorDetail")
     data object ReviewList : Routes("ReviewList")

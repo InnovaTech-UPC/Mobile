@@ -26,7 +26,7 @@ class AdvisorRepository(private val advisorService: AdvisorService) {
 
     suspend fun searchAdvisorByAdvisorId(advisorId: Long, token: String): Resource<Advisor> = withContext(Dispatchers.IO) {
         if (token.isBlank()) {
-            return@withContext Resource.Error(message = "Un token es requeridod")
+            return@withContext Resource.Error(message = "Un token es requerido")
         }
         val bearerToken = "Bearer $token"
         val response = advisorService.getAdvisorByAdvisorId(advisorId, bearerToken)
@@ -38,5 +38,10 @@ class AdvisorRepository(private val advisorService: AdvisorService) {
             return@withContext Resource.Error(message = "No se encontró asesor")
         }
         return@withContext Resource.Error(response.message())
+    }
+
+    suspend fun isUserAdvisor(userId: Long, token: String): Boolean = withContext(Dispatchers.IO) {
+        val result = searchAdvisorByUserId(userId, token)
+        return@withContext result is Resource.Success
     }
 }

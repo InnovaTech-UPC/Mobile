@@ -42,6 +42,22 @@ class AppointmentRepository(private val appointmentService: AppointmentService) 
         return@withContext Resource.Error(response.message())
     }
 
+    suspend fun getAppointmentsByAdvisor(advisorId: Long, token: String): Resource<List<Appointment>> = withContext(Dispatchers.IO) {
+        if (token.isBlank()) {
+            return@withContext Resource.Error(message = "Un token es requerido")
+        }
+        val bearerToken = "Bearer $token"
+        val response = appointmentService.getAppointmentsByAdvisor(advisorId, bearerToken)
+        if (response.isSuccessful) {
+            response.body()?.let { appointmentList ->
+                val appointments = appointmentList.map { it.toAppointment() }
+                return@withContext Resource.Success(appointments)
+            }
+            return@withContext Resource.Error(message = "No se encontraron citas")
+        }
+        return@withContext Resource.Error(response.message())
+    }
+
     suspend fun getAppointmentsByFarmer(farmerId: Long, token: String): Resource<List<Appointment>> = withContext(Dispatchers.IO) {
         if (token.isBlank()) {
             return@withContext Resource.Error(message = "Un token es requerido")

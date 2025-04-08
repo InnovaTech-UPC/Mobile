@@ -56,6 +56,26 @@ class ProfileRepository(private val profileService: ProfileService) {
         return@withContext Resource.Error(response.message())
     }
 
+    suspend fun searchFarmerProfile(farmerId: Long, token: String): Resource<Profile> = withContext(Dispatchers.IO) {
+        try {
+            if (token.isBlank()) {
+                return@withContext Resource.Error(message = "Un token es requerido")
+            }
+            val bearerToken = "Bearer $token"
+            val response = profileService.getProfile(farmerId, bearerToken)
+            if (response.isSuccessful) {
+                response.body()?.let { profileDto ->
+                    val profile = profileDto.toProfile()
+                    return@withContext Resource.Success(data = profile)
+                }
+                return@withContext Resource.Error(message = "No se encontró el perfil del granjero")
+            }
+            return@withContext Resource.Error(message = "Error fetching farmer profile: ${response.message()}")
+        } catch (e: Exception) {
+            return@withContext Resource.Error(message = "Exception: ${e.localizedMessage}")
+        }
+    }
+
     suspend fun getAdvisorList(token: String): Resource<List<Profile>> = withContext(Dispatchers.IO) {
         if (token.isBlank()) {
             return@withContext Resource.Error(message = "Un token es requerido")
