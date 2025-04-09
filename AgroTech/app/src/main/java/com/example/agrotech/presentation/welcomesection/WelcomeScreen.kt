@@ -63,7 +63,7 @@ fun WelcomeScreen(viewModel: WelcomeViewModel) {
                 )
 
                 Text(
-                    text = "Bienvenido a AgroSupport",
+                    text = "Bienvenido a AgroTech",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
