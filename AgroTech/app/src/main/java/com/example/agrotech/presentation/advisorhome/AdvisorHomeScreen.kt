@@ -1,6 +1,9 @@
 package com.example.agrotech.presentation.advisorhome
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -10,19 +13,39 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.agrotech.R
 import com.example.agrotech.presentation.advisorhistory.AppointmentCardAdvisorList
+import com.example.agrotech.presentation.navigationcard.CardItem
+import com.example.agrotech.presentation.navigationcard.NavigationCard
+
 
 @Composable
 fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
     LaunchedEffect(Unit) {
         viewModel.loadData()
+        viewModel.getNotificationCount()
     }
+
+    val cardItems = listOf(
+        CardItem(
+            image = painterResource(id = R.drawable.icon_publications_advisor),
+            text = "Mis Publicaciones",
+            onClick = { viewModel.goToNotificationList() }
+        ),
+        CardItem(
+            image = painterResource(id = R.drawable.icon_appointments),
+            text = "Citas",
+            onClick = { viewModel.goToNotificationList() }
+        ),
+    )
 
     val appointments = viewModel.appointments
     val advisorId = viewModel.advisorId
@@ -34,13 +57,14 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
     val isExpanded = viewModel.expanded.value
 
     val upcomingAppointments = appointments
-        .sortedBy { it.scheduledDate } // Ordenar por fecha
-        .take(2) // Tomar solo las 2 primeras
+        .sortedBy { it.scheduledDate }
+        .take(2)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Row(
             modifier = Modifier
@@ -132,7 +156,6 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 )
             }
         }
-
         when {
             isLoading -> {
                 LoadingView()
@@ -146,6 +169,24 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                     farmerNames = farmerNames,
                     farmerImagesUrl = farmerImagesUrl
                 )
+                Text(
+                    text = "Elige tu próximo paso",
+                    modifier = Modifier.padding(top = 40.dp, bottom = 16.dp, start = 15.dp),
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleLarge
+                )
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 15.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(
+                        count = 2,
+                        itemContent = { index ->
+                            NavigationCard(index, cardItems)
+                        }
+                    )
+                }
             }
             else -> {
                 Text(
@@ -154,6 +195,8 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 )
             }
         }
+
+
     }
 }
 

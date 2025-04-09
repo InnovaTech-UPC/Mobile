@@ -27,7 +27,7 @@ fun AppointmentCardAdvisorList(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp)
+            .padding(10.dp)
     ) {
         Column(
             modifier = Modifier

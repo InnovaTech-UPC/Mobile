@@ -1,4 +1,4 @@
-package com.example.agrotech.presentation.farmerhome
+package com.example.agrotech.presentation.navigationcard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 data class CardItem(
@@ -51,7 +52,8 @@ fun NavigationCard(index : Int, cardItems: List<CardItem>) {
                 text = cardItems[index].text,
                 modifier = Modifier.padding(top = 8.dp),
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center
             )
         }
     }

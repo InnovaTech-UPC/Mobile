@@ -38,7 +38,7 @@ fun AppointmentCardAdvisor(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp)
+            .padding(vertical = 0.dp)
             .background(Color(0xFFFF7121), shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
     ) {
@@ -53,24 +53,24 @@ fun AppointmentCardAdvisor(
                     .shadow(6.dp, CircleShape),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.padding(horizontal = 12.dp))
+            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
+                    .padding(vertical = 3.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "Tienes una cita pendiente con: $farmerName",
-                    fontSize = 20.sp,
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "El día ${formatDateShort(appointment.scheduledDate)} a las ${formatTime(appointment.startTime)}",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
             }

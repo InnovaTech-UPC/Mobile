@@ -39,7 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.agrotech.R
 import com.example.agrotech.presentation.farmerhistory.AppointmentCard
-
+import com.example.agrotech.presentation.navigationcard.CardItem
+import com.example.agrotech.presentation.navigationcard.NavigationCard
 
 
 @Composable
