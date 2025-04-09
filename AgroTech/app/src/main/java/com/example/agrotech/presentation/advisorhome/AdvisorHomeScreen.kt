@@ -177,13 +177,13 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 )
                 Text(
                     text = "Elige tu próximo paso",
-                    modifier = Modifier.padding(top = 40.dp, bottom = 16.dp, start = 15.dp),
+                    modifier = Modifier.padding(top = 40.dp, bottom = 16.dp),
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge
                 )
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 15.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(

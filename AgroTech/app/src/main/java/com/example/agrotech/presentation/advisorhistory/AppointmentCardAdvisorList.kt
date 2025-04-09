@@ -27,12 +27,10 @@ fun AppointmentCardAdvisorList(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(10.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
             Text(
                 text = "Tu próxima cita",
