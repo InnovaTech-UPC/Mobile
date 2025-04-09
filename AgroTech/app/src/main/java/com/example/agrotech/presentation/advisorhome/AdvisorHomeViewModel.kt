@@ -50,6 +50,9 @@ class AdvisorHomeViewModel(
     var farmerNames by mutableStateOf<Map<Long, String>>(emptyMap())
         private set
 
+    var farmerImagesUrl by mutableStateOf<Map<Long, String>>(emptyMap())
+        private set
+
     private val _notificationCount = mutableStateOf(0)
     val notificationCount: State<Int> get() = _notificationCount
 
@@ -82,8 +85,8 @@ class AdvisorHomeViewModel(
                     advisorId = advisorResult.data?.id
                     fetchAdvisorName(GlobalVariables.USER_ID)
                     advisorId?.let {
-                        fetchAppointments(it) // Obtener las citas usando el advisorId
-                        fetchFarmerNames() // Obtener los nombres de los agricultores
+                        fetchAppointments(it)
+                        fetchFarmerNamesAndImages()
                     }
                 } else if (advisorResult is Resource.Error) {
                     errorMessage = advisorResult.message
@@ -106,10 +109,11 @@ class AdvisorHomeViewModel(
         }
     }
 
-    private suspend fun fetchFarmerNames() {
+    private suspend fun fetchFarmerNamesAndImages() {
         val farmersNamesMap = mutableMapOf<Long, String>()
+        val farmersImagesMap = mutableMapOf<Long, String>()
 
-        val farmerNameResults = appointments.map { appointment ->
+        val farmerDataResults = appointments.map { appointment ->
             viewModelScope.async {
                 try {
                     val farmerProfileResult = farmerRepository.searchFarmerByFarmerId(appointment.farmerId, GlobalVariables.TOKEN)
@@ -123,19 +127,29 @@ class AdvisorHomeViewModel(
                             "Name not found"
                         }
 
+                        val farmerImageUrl = if (profileResult is Resource.Success) {
+                            profileResult.data?.photo ?: "Image not found"
+                        } else {
+                            "Image not found"
+                        }
+
                         farmersNamesMap[appointment.id] = farmerName
+                        farmersImagesMap[appointment.id] = farmerImageUrl
                     } else {
                         farmersNamesMap[appointment.id] = "Name not found"
+                        farmersImagesMap[appointment.id] = "Image not found"
                     }
                 } catch (e: Exception) {
                     errorMessage = "Error fetching farmer profile: ${e.localizedMessage}"
                     farmersNamesMap[appointment.id] = "Name not found"
+                    farmersImagesMap[appointment.id] = "Image not found"
                 }
             }
         }
-        farmerNameResults.awaitAll()
+        farmerDataResults.awaitAll()
 
         farmerNames = farmersNamesMap
+        farmerImagesUrl = farmersImagesMap
     }
 
 

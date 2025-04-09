@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.protolite.well.known.types)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.storage.ktx)
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.common.ktx)

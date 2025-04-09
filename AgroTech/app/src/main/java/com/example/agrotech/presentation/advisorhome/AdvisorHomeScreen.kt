@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.agrotech.common.GlobalVariables
 import com.example.agrotech.presentation.advisorhistory.AppointmentCardAdvisorList
 
 @Composable
@@ -29,9 +28,14 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
     val advisorId = viewModel.advisorId
     val advisorName = viewModel.advisorName
     val farmerNames = viewModel.farmerNames
+    val farmerImagesUrl = viewModel.farmerImagesUrl
     val isLoading = viewModel.isLoading
     val errorMessage = viewModel.errorMessage
     val isExpanded = viewModel.expanded.value
+
+    val upcomingAppointments = appointments
+        .sortedBy { it.scheduledDate } // Ordenar por fecha
+        .take(2) // Tomar solo las 2 primeras
 
     Column(
         modifier = Modifier
@@ -136,10 +140,11 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
             errorMessage != null -> {
                 ErrorView(message = errorMessage)
             }
-            advisorId != null && appointments.isNotEmpty() -> {
+            advisorId != null && upcomingAppointments.isNotEmpty() -> {
                 AppointmentCardAdvisorList(
-                    appointments = appointments,
-                    farmerNames = farmerNames
+                    appointments = upcomingAppointments,
+                    farmerNames = farmerNames,
+                    farmerImagesUrl = farmerImagesUrl
                 )
             }
             else -> {

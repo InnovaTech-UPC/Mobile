@@ -1,19 +1,30 @@
 package com.example.agrotech.presentation.advisorhistory
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.agrotech.domain.appointment.Appointment
-import com.example.agrotech.presentation.advisorhome.AdvisorHomeViewModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,37 +33,72 @@ import java.util.*
 fun AppointmentCardAdvisor(
     appointment: Appointment,
     farmerName: String,
+    farmerImageUrl: String
 ) {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        shape = RoundedCornerShape(8.dp)
+            .padding(vertical = 12.dp)
+            .background(Color(0xFFFF7121), shape = RoundedCornerShape(16.dp))
+            .padding(16.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Tienes una cita con: $farmerName", fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "El día : ${appointment.scheduledDate}")
-            Text(text = "Hora de inicio: ${formatDate(appointment.startTime)}")
-            Text(text = "Hora de final: ${formatDate(appointment.endTime)}")
-            Text(text = "Meeting URL: ${appointment.meetingUrl}")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = rememberAsyncImagePainter(farmerImageUrl),
+                contentDescription = "Farmer Image",
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.White, CircleShape)
+                    .shadow(6.dp, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.padding(horizontal = 12.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Tienes una cita pendiente con: $farmerName",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "El día ${formatDateShort(appointment.scheduledDate)} a las ${formatTime(appointment.startTime)}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
         }
     }
 }
 
-fun formatDate(dateString: String): String {
+
+
+fun formatDateShort(dateString: String): String {
     return try {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        val date = sdf.parse(dateString)
-        val outputFormat = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         outputFormat.format(date ?: Date())
     } catch (e: ParseException) {
-        try {
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val time = timeFormat.parse(dateString)
-            SimpleDateFormat("hh:mm a", Locale.getDefault()).format(time ?: Date())
-        } catch (e: ParseException) {
-            dateString
-        }
+        dateString
     }
 }
+
+fun formatTime(dateString: String): String {
+    return try {
+        val inputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val time = inputFormat.parse(dateString)
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.format(time ?: Date())
+    } catch (e: ParseException) {
+        dateString
+    }
+}
+
