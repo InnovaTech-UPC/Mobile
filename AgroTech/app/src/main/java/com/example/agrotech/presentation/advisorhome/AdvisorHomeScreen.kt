@@ -1,5 +1,6 @@
 package com.example.agrotech.presentation.advisorhome
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
@@ -58,7 +59,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
 
     val upcomingAppointments = appointments
         .sortedBy { it.scheduledDate }
-        .take(2)
+        .take(1)
 
     Column(
         modifier = Modifier
@@ -164,6 +165,11 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 ErrorView(message = errorMessage)
             }
             advisorId != null && upcomingAppointments.isNotEmpty() -> {
+                Image(
+                    painter = painterResource(id = R.drawable.hero_image),
+                    contentDescription = "Hero Image",
+                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).padding(bottom = 16.dp)
+                )
                 AppointmentCardAdvisorList(
                     appointments = upcomingAppointments,
                     farmerNames = farmerNames,

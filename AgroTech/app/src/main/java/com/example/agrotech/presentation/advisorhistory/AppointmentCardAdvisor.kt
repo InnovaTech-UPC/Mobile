@@ -1,30 +1,24 @@
 package com.example.agrotech.presentation.advisorhistory
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import com.example.agrotech.R
 import com.example.agrotech.domain.appointment.Appointment
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.glide.GlideImage
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,52 +27,78 @@ import java.util.*
 fun AppointmentCardAdvisor(
     appointment: Appointment,
     farmerName: String,
-    farmerImageUrl: String
+    farmerImageUrl: String,
+    onClick: (() -> Unit)? = null
 ) {
-    Column(
+    Card(
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
-            .padding(vertical = 0.dp)
-            .background(Color(0xFFFF7121), shape = RoundedCornerShape(16.dp))
-            .padding(16.dp)
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = rememberAsyncImagePainter(farmerImageUrl),
-                contentDescription = "Farmer Image",
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            GlideImage(
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(64.dp)
                     .clip(CircleShape)
-                    .border(2.dp, Color.White, CircleShape)
-                    .shadow(6.dp, CircleShape),
-                contentScale = ContentScale.Crop
+                    .border(4.dp, Color.Gray, CircleShape),
+                imageModel = {
+                    if (farmerImageUrl.isNotBlank()) farmerImageUrl else R.drawable.placeholder
+                },
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center
+                )
             )
-            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 3.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Tienes una cita pendiente con: $farmerName",
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    text = "Cita con: $farmerName",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Italic,
+                        color = Color(0xFF2B2B2B)
+                    ),
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+
+                Divider(
+                    color = Color.Black,
+                    thickness = 1.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp)
+                )
+
                 Text(
-                    text = "El día ${formatDateShort(appointment.scheduledDate)} a las ${formatTime(appointment.startTime)}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    text = "${formatDateShort(appointment.scheduledDate)} (${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)})",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF06204A)
+                    ),
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
             }
         }
     }
 }
-
-
 
 fun formatDateShort(dateString: String): String {
     return try {
@@ -101,4 +121,3 @@ fun formatTime(dateString: String): String {
         dateString
     }
 }
-
