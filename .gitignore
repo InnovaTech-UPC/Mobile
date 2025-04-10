@@ -1,7 +1,7 @@
 *.iml
 /Agrotech/.gradle/
 .idea
-/Agrotech/.idea/
+/Agrotech/.idea/*
 .DS_Store
 /build
 /captures

@@ -1,27 +1,33 @@
 package com.example.agrotech.common
 
 sealed class Routes(val route: String) {
+    // General
+    data object Welcome : Routes("Welcome")
+    data object SignIn : Routes("SignIn")
+    data object ForgotPassword : Routes("ForgotPassword")
+    data object RestorePassword : Routes("RestorePassword")
+    data object SignUp : Routes("SignUp")
+    data object NotificationList : Routes("NotificationList")
+    // Farmer
     data object FarmerHome : Routes("FarmerHome")
-    data object AdvisorHome : Routes("AdvisorHome")
-    data object AdvisorList : Routes("AdvisorList")
-    data object AdvisorDetail : Routes("AdvisorDetail")
     data object ReviewList : Routes("ReviewList")
     data object NewAppointment : Routes("NewAppointment")
     data object NewAppointmentConfirmation : Routes("NewAppointmentConfirmation")
     data object FarmerAppointmentList : Routes("FarmerAppointmentList")
     data object FarmerAppointmentHistory : Routes("FarmerAppointmentHistory")
-    data object Welcome : Routes("Welcome")
-    data object SignIn : Routes("SignIn")
-    data object ForgotPassword : Routes("ForgotPassword")
-    data object RestorePassword : Routes("RestorePassword")
     data object FarmerAppointmentDetail : Routes("FarmerAppointmentDetail")
     data object CancelAppointmentConfirmation : Routes("CancelAppointmentConfirmation")
     data object FarmerReviewAppointment : Routes("FarmerReviewAppointment")
-    data object SignUp : Routes("SignUp")
     data object CreateAccountFarmer : Routes("CreateAccountFarmer")
     data object CreateProfileFarmer : Routes("CreateProfileFarmer")
     data object ConfirmCreationAccountFarmer : Routes("ConfirmCreationAccountFarmer")
-    data object NotificationList : Routes("NotificationList")
     data object ExplorePosts : Routes("ExplorePosts")
     data object FarmerProfile : Routes("FarmerProfile")
+    // Advisor
+    data object AdvisorHome : Routes("AdvisorHome")
+    data object AdvisorList : Routes("AdvisorList")
+    data object AdvisorDetail : Routes("AdvisorDetail")
+    data object AdvisorPosts : Routes("AdvisorPosts")
+    data object AdvisorPostDetail : Routes("AdvisorPostDetail")
+    data object CreatePost : Routes("CreatePost")
 }

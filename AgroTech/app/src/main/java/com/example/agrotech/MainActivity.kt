@@ -36,6 +36,7 @@ import com.example.agrotech.presentation.advisorhome.AdvisorHomeScreen
 import com.example.agrotech.presentation.advisorhome.AdvisorHomeViewModel
 import com.example.agrotech.presentation.advisorlist.AdvisorListScreen
 import com.example.agrotech.presentation.advisorlist.AdvisorListViewModel
+import com.example.agrotech.presentation.advisorposts.AdvisorPostsScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.CancelAppointmentSuccessScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.FarmerAppointmentDetailScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.FarmerAppointmentDetailViewModel
@@ -141,6 +142,7 @@ class MainActivity : ComponentActivity() {
                 val notificationListViewModel = NotificationListViewModel(navController, notificationRepository)
                 val explorePostsViewModel = ExplorePostsViewModel(navController, postRepository, profileRepository, advisorRepository)
                 val farmerProfileViewModel = FarmerProfileViewModel(navController, profileRepository, cloudStorageRepository)
+                val advisorPostsViewModel = com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel(navController, postRepository, advisorRepository)
 
                 //Navigation
                 NavHost(navController = navController, startDestination = Routes.Welcome.route) {
@@ -222,7 +224,9 @@ class MainActivity : ComponentActivity() {
                     composable(route = Routes.FarmerProfile.route) {
                         FarmerProfileScreen(viewModel = farmerProfileViewModel)
                     }
-
+                    composable(route = Routes.AdvisorPosts.route) {
+                        AdvisorPostsScreen(viewModel = advisorPostsViewModel)
+                    }
                 }
             }
         }

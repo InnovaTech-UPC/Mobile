@@ -39,7 +39,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
         CardItem(
             image = painterResource(id = R.drawable.icon_publications_advisor),
             text = "Mis Publicaciones",
-            onClick = { viewModel.goToNotificationList() }
+            onClick = { viewModel.goToPosts() }
         ),
         CardItem(
             image = painterResource(id = R.drawable.icon_appointments),

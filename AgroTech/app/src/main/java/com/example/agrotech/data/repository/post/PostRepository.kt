@@ -27,6 +27,24 @@ class PostRepository(private val postService: PostService) {
         }
     }
 
+    suspend fun getPostsByAdvisorId(token: String, advisorId: Long): Resource<List<Post>> = withContext(Dispatchers.IO) {
+        if (token.isBlank()) {
+            return@withContext Resource.Error(message = "Un token es requerido")
+        }
+        val bearerToken = "Bearer $token"
+        val response = postService.getPostsByAdvisorId(bearerToken, advisorId)
+        if (response.isSuccessful) {
+            response.body()?.let { postsDto ->
+                val posts = postsDto.map { it.toPost() }
+                return@withContext Resource.Success(posts)
+            }
+            return@withContext Resource.Error(message = "Error al obtener publicaciones")
+        }
+        else {
+            return@withContext Resource.Error(response.message())
+        }
+    }
+
     suspend fun createPost(token: String, post: Post): Resource<Post> = withContext(Dispatchers.IO) {
         if (token.isBlank()) {
             return@withContext Resource.Error(message = "Un token es requerido")

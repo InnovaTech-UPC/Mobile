@@ -17,6 +17,9 @@ interface PostService {
     suspend fun getPosts(@Header("Authorization") token: String): Response<List<PostDto>>
 
     @GET("posts")
+    suspend fun getPostsByAdvisorId(@Header("Authorization") token: String, @Query("advisorId") advisorId: Long): Response<List<PostDto>>
+
+    @GET("posts")
     suspend fun getPostsByAdvisor(@Header("Authorization") token: String, @Query("advisorId") advisorId: Long): Response<List<PostDto>>
 
     @GET("posts/{id}")
