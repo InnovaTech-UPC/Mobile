@@ -18,6 +18,7 @@ class CreateAccountViewModel(private val navController: NavController
     }
 
     fun goToFormsAdvisor() {
-        /* TODO: Implementar la navegación a la pantalla de registro de asesor */
+        GlobalVariables.ROLES = listOf("ROLE_USER", "ROLE_ADVISOR")
+        navController.navigate(Routes.CreateAccountAdvisor.route)
     }
 }

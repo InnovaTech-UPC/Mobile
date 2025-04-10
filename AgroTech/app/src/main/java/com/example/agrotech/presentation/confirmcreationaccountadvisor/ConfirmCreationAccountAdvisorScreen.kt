@@ -1,4 +1,4 @@
-package com.example.agrotech.presentation.confirmcreationaccountfarmer
+package com.example.agrotech.presentation.confirmcreationaccountadvisor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun ConfirmCreationAccountFarmerScreen(viewModel: ConfirmCreationAccountFarmerViewModel) {
+fun ConfirmCreationAccountAdvisorScreen(viewModel: ConfirmCreationAccountAdvisorViewModel) {
     Scaffold { paddingValues ->
         Box(
             modifier = Modifier
@@ -31,7 +31,7 @@ fun ConfirmCreationAccountFarmerScreen(viewModel: ConfirmCreationAccountFarmerVi
             ) {
                 // Emoji
                 Text(
-                    text = "🧑‍🌾😁",
+                    text = "🧑‍💻😁",
                     fontSize = 64.sp // Tamaño del emoji
                 )
 
@@ -45,7 +45,7 @@ fun ConfirmCreationAccountFarmerScreen(viewModel: ConfirmCreationAccountFarmerVi
 
                 // Línea 3
                 Text(
-                    text = "¡Tu cuenta de granjero ha sido creada correctamente!",
+                    text = "¡Tu cuenta de asesor ha sido creada correctamente!",
                     fontSize = 16.sp,
                     modifier = Modifier.padding(top = 8.dp),
                     textAlign = TextAlign.Center
@@ -59,7 +59,7 @@ fun ConfirmCreationAccountFarmerScreen(viewModel: ConfirmCreationAccountFarmerVi
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                         .clickable {
-                            viewModel.goToFarmerHomeScreen()
+                            viewModel.goToAdvisorHomeScreen()
                         }
                         .background(Color(0xFF092C4C), shape = RoundedCornerShape(8.dp)) // Esquinas redondeadas
                         .padding(16.dp),

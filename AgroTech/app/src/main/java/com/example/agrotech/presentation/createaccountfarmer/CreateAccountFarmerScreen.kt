@@ -45,16 +45,13 @@ fun CreateAccountFarmerScreen(viewModel: CreateAccountFarmerViewModel) {
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
-            // Crear un Calendar con los valores seleccionados
             val calendar = Calendar.getInstance().apply {
                 set(year, month, dayOfMonth)
             }
 
-            // Usar SimpleDateFormat para formatear la fecha correctamente
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val formattedDate = dateFormat.format(calendar.time)
 
-            // Actualizar el estado con la fecha formateada
             selectedDate.value = formattedDate
             viewModel.birthDate.value = formattedDate
         },

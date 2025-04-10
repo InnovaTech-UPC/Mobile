@@ -175,6 +175,22 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 farmerNames = farmerNames,
                 farmerImagesUrl = farmerImagesUrl
             )
+        } else {
+            Text(
+                text = "Tu próxima cita",
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                text = "No tienes citas programadas",
+                modifier = Modifier.padding(bottom = 16.dp),
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                style = MaterialTheme.typography.titleLarge
+            )
         }
 
         Text(

@@ -40,13 +40,19 @@ import com.example.agrotech.presentation.advisorpostdetail.AdvisorPostDetailScre
 import com.example.agrotech.presentation.advisorpostdetail.AdvisorPostDetailViewModel
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsScreen
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel
+import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorScreen
+import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorViewModel
 import com.example.agrotech.presentation.farmerappointmentdetail.CancelAppointmentSuccessScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.FarmerAppointmentDetailScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.FarmerAppointmentDetailViewModel
 import com.example.agrotech.presentation.confirmcreationaccountfarmer.ConfirmCreationAccountFarmerScreen
 import com.example.agrotech.presentation.confirmcreationaccountfarmer.ConfirmCreationAccountFarmerViewModel
+import com.example.agrotech.presentation.createaccountadvisor.CreateAccountAdvisorScreen
+import com.example.agrotech.presentation.createaccountadvisor.CreateAccountAdvisorViewModel
 import com.example.agrotech.presentation.createaccountfarmer.CreateAccountFarmerScreen
 import com.example.agrotech.presentation.createaccountfarmer.CreateAccountFarmerViewModel
+import com.example.agrotech.presentation.createprofileadvisor.CreateProfileAdvisorScreen
+import com.example.agrotech.presentation.createprofileadvisor.CreateProfileAdvisorViewModel
 import com.example.agrotech.presentation.createprofilefarmer.CreateProfileFarmerScreen
 import com.example.agrotech.presentation.createprofilefarmer.CreateProfileFarmerViewModel
 import com.example.agrotech.presentation.exploreposts.ExplorePostsScreen
@@ -142,8 +148,11 @@ class MainActivity : ComponentActivity() {
                 val farmerAppointmentDetailViewModel = FarmerAppointmentDetailViewModel(navController, appointmentRepository, advisorRepository, profileRepository, reviewRepository, availableDateRepository, notificationRepository)
                 val farmerReviewAdvisorViewModel = FarmerReviewAppointmentViewModel(navController, reviewRepository, appointmentRepository, advisorRepository, profileRepository)
                 val createAccountViewModel = CreateAccountViewModel(navController)
+                val createAccountAdvisorViewModel = CreateAccountAdvisorViewModel(navController, authenticationRepository)
                 val createAccountFarmerViewModel = CreateAccountFarmerViewModel(navController, authenticationRepository)
+                val createProfileAdvisorViewModel = CreateProfileAdvisorViewModel(navController , profileRepository, createAccountAdvisorViewModel, cloudStorageRepository)
                 val createProfileFarmerViewModel = CreateProfileFarmerViewModel(navController, profileRepository, createAccountFarmerViewModel, cloudStorageRepository)
+                val confirmCreationAccountAdvisorViewModel = ConfirmCreationAccountAdvisorViewModel(navController)
                 val confirmCreationAccountFarmerViewModel = ConfirmCreationAccountFarmerViewModel(navController)
                 val notificationListViewModel = NotificationListViewModel(navController, notificationRepository)
                 val explorePostsViewModel = ExplorePostsViewModel(navController, postRepository, profileRepository, advisorRepository)
@@ -213,11 +222,20 @@ class MainActivity : ComponentActivity() {
                     composable(route = Routes.SignUp.route) {
                         CreateAccountScreen(viewModel = createAccountViewModel)
                     }
+                    composable(route = Routes.CreateAccountAdvisor.route) {
+                        CreateAccountAdvisorScreen(viewModel = createAccountAdvisorViewModel)
+                    }
                     composable(route = Routes.CreateAccountFarmer.route) {
                         CreateAccountFarmerScreen(viewModel = createAccountFarmerViewModel)
                     }
+                    composable(route = Routes.CreateProfileAdvisor.route) {
+                        CreateProfileAdvisorScreen(viewModel = createProfileAdvisorViewModel)
+                    }
                     composable(route = Routes.CreateProfileFarmer.route) {
                         CreateProfileFarmerScreen(viewModel = createProfileFarmerViewModel)
+                    }
+                    composable(route = Routes.ConfirmCreationAccountAdvisor.route) {
+                        ConfirmCreationAccountAdvisorScreen(viewModel = confirmCreationAccountAdvisorViewModel)
                     }
                     composable(route = Routes.ConfirmCreationAccountFarmer.route) {
                         ConfirmCreationAccountFarmerScreen(viewModel = confirmCreationAccountFarmerViewModel)
