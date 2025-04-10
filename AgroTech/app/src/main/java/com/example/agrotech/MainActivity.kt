@@ -91,6 +91,7 @@ class MainActivity : ComponentActivity() {
             .build()
             .getUserDao()
 
+
         //Services
         val profileService = retrofit.create(ProfileService::class.java)
         val advisorService = retrofit.create(AdvisorService::class.java)

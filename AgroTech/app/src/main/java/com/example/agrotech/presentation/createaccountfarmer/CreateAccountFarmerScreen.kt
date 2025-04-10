@@ -22,12 +22,46 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import com.example.agrotech.R
+import android.app.DatePickerDialog
+import android.icu.text.SimpleDateFormat
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.ui.platform.LocalContext
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun CreateAccountFarmerScreen(viewModel: CreateAccountFarmerViewModel) {
     val state by viewModel.state
     val snackbarMessage by viewModel.snackbarMessage
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val context = LocalContext.current
+    val calendar = remember { Calendar.getInstance() }
+
+    // Variables para la selección de fecha
+    val selectedDate = remember { mutableStateOf(viewModel.birthDate.value) }
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            // Crear un Calendar con los valores seleccionados
+            val calendar = Calendar.getInstance().apply {
+                set(year, month, dayOfMonth)
+            }
+
+            // Usar SimpleDateFormat para formatear la fecha correctamente
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(calendar.time)
+
+            // Actualizar el estado con la fecha formateada
+            selectedDate.value = formattedDate
+            viewModel.birthDate.value = formattedDate
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
 
     LaunchedEffect(snackbarMessage) {
         snackbarMessage?.let {
@@ -115,16 +149,27 @@ fun CreateAccountFarmerScreen(viewModel: CreateAccountFarmerViewModel) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Campo de Fecha de Nacimiento
+                 // Campo de Fecha de Nacimiento
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
                     Text(text = "Fecha de Nacimiento*", style = MaterialTheme.typography.bodyMedium)
-                    TextField(
-                        value = viewModel.birthDate.value,
-                        onValueChange = { viewModel.birthDate.value = it },
-                        placeholder = { Text("Ingrese su fecha de nacimiento") },
-                        modifier = Modifier.fillMaxWidth()
+                    OutlinedTextField(
+                        value = selectedDate.value,
+                        onValueChange = {},
+                        readOnly = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            IconButton(onClick = { datePickerDialog.show() }) {
+                                Icon(
+                                    imageVector = Icons.Default.CalendarToday, // Use a calendar icon
+                                    contentDescription = "Seleccionar fecha"
+                                )
+                            }
+                        }
                     )
                 }
+
+
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Campo de Contraseña
