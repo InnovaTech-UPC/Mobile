@@ -36,7 +36,10 @@ import com.example.agrotech.presentation.advisorhome.AdvisorHomeScreen
 import com.example.agrotech.presentation.advisorhome.AdvisorHomeViewModel
 import com.example.agrotech.presentation.advisorlist.AdvisorListScreen
 import com.example.agrotech.presentation.advisorlist.AdvisorListViewModel
+import com.example.agrotech.presentation.advisorpostdetail.AdvisorPostDetailScreen
+import com.example.agrotech.presentation.advisorpostdetail.AdvisorPostDetailViewModel
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsScreen
+import com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel
 import com.example.agrotech.presentation.farmerappointmentdetail.CancelAppointmentSuccessScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.FarmerAppointmentDetailScreen
 import com.example.agrotech.presentation.farmerappointmentdetail.FarmerAppointmentDetailViewModel
@@ -143,7 +146,8 @@ class MainActivity : ComponentActivity() {
                 val notificationListViewModel = NotificationListViewModel(navController, notificationRepository)
                 val explorePostsViewModel = ExplorePostsViewModel(navController, postRepository, profileRepository, advisorRepository)
                 val farmerProfileViewModel = FarmerProfileViewModel(navController, profileRepository, cloudStorageRepository)
-                val advisorPostsViewModel = com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel(navController, postRepository, advisorRepository)
+                val advisorPostsViewModel = AdvisorPostsViewModel(navController, postRepository, advisorRepository)
+                val advisorPostDetailViewModel = AdvisorPostDetailViewModel(navController, postRepository)
 
                 //Navigation
                 NavHost(navController = navController, startDestination = Routes.Welcome.route) {
@@ -227,6 +231,10 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.AdvisorPosts.route) {
                         AdvisorPostsScreen(viewModel = advisorPostsViewModel)
+                    }
+                    composable(route = Routes.AdvisorPostDetail.route + "/{postId}") {
+                        val postId = it.arguments?.getString("postId")?.toLong() ?: 0
+                        AdvisorPostDetailScreen(viewModel = advisorPostDetailViewModel, postId = postId)
                     }
                 }
             }

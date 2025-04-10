@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.agrotech.R
 import com.example.agrotech.domain.post.Post
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -140,7 +141,7 @@ fun PostItem(post: Post, onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         GlideImage(
-            imageModel = { post.image },
+            imageModel = { post.image.ifBlank { R.drawable.placeholder } },
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
