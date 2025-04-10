@@ -75,8 +75,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
         ) {
             Text(
                 text = "Bienvenido(a), ${advisorName ?: "Loading..."}",
-                modifier = Modifier
-                    .padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = 16.dp),
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
@@ -127,27 +126,19 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                     text = {
                         Text(
                             text = "Perfil",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold
-                            )
+                            style = TextStyle(fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Bold)
                         )
                     },
                     onClick = {
-                        //viewModel.goToProfile()
-                        //viewModel.setExpanded(false)
+                        // viewModel.goToProfile()
+                        // viewModel.setExpanded(false)
                     }
                 )
                 DropdownMenuItem(
                     text = {
                         Text(
                             text = "Salir",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                color = Color.Red,
-                                fontWeight = FontWeight.Bold
-                            )
+                            style = TextStyle(fontSize = 16.sp, color = Color.Red, fontWeight = FontWeight.Bold)
                         )
                     },
                     onClick = {
@@ -157,54 +148,58 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 )
             }
         }
+
         when {
             isLoading -> {
                 LoadingView()
+                return@Column
             }
             errorMessage != null -> {
                 ErrorView(message = errorMessage)
-            }
-            advisorId != null && upcomingAppointments.isNotEmpty() -> {
-                Image(
-                    painter = painterResource(id = R.drawable.hero_image),
-                    contentDescription = "Hero Image",
-                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).padding(bottom = 16.dp)
-                )
-                AppointmentCardAdvisorList(
-                    appointments = upcomingAppointments,
-                    farmerNames = farmerNames,
-                    farmerImagesUrl = farmerImagesUrl
-                )
-                Text(
-                    text = "Elige tu próximo paso",
-                    modifier = Modifier.padding(top = 40.dp, bottom = 16.dp),
-                    fontFamily = FontFamily.SansSerif,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(
-                        count = 2,
-                        itemContent = { index ->
-                            NavigationCard(index, cardItems)
-                        }
-                    )
-                }
-            }
-            else -> {
-                Text(
-                    text = "No appointments found.",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                return@Column
             }
         }
 
+        Image(
+            painter = painterResource(id = R.drawable.hero_image),
+            contentDescription = "Hero Image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .padding(bottom = 16.dp)
+        )
 
+        if (advisorId != null && upcomingAppointments.isNotEmpty()) {
+            AppointmentCardAdvisorList(
+                appointments = upcomingAppointments,
+                farmerNames = farmerNames,
+                farmerImagesUrl = farmerImagesUrl
+            )
+        }
+
+        Text(
+            text = "Elige tu próximo paso",
+            modifier = Modifier.padding(top = 40.dp, bottom = 16.dp),
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(count = cardItems.size) { index ->
+                NavigationCard(index, cardItems)
+            }
+        }
     }
+
+
 }
+
 
 @Composable
 fun LoadingView() {
