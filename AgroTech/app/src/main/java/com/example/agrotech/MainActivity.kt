@@ -66,6 +66,8 @@ import com.example.agrotech.presentation.login.LoginViewModel
 import com.example.agrotech.presentation.newappointment.NewAppointmentScreen
 import com.example.agrotech.presentation.newappointment.NewAppointmentSuccessScreen
 import com.example.agrotech.presentation.newappointment.NewAppointmentViewModel
+import com.example.agrotech.presentation.newpost.NewPostScreen
+import com.example.agrotech.presentation.newpost.NewPostViewModel
 import com.example.agrotech.presentation.notificationlist.NotificationListScreen
 import com.example.agrotech.presentation.notificationlist.NotificationListViewModel
 import com.example.agrotech.presentation.rating.FarmerReviewAppointmentScreen
@@ -148,7 +150,7 @@ class MainActivity : ComponentActivity() {
                 val farmerProfileViewModel = FarmerProfileViewModel(navController, profileRepository, cloudStorageRepository)
                 val advisorPostsViewModel = AdvisorPostsViewModel(navController, postRepository, advisorRepository)
                 val advisorPostDetailViewModel = AdvisorPostDetailViewModel(navController, postRepository)
-
+                val newPostViewModel = NewPostViewModel(navController, postRepository, advisorRepository, cloudStorageRepository)
                 //Navigation
                 NavHost(navController = navController, startDestination = Routes.Welcome.route) {
                     composable(route = Routes.Welcome.route) {
@@ -235,6 +237,9 @@ class MainActivity : ComponentActivity() {
                     composable(route = Routes.AdvisorPostDetail.route + "/{postId}") {
                         val postId = it.arguments?.getString("postId")?.toLong() ?: 0
                         AdvisorPostDetailScreen(viewModel = advisorPostDetailViewModel, postId = postId)
+                    }
+                    composable(route = Routes.NewPost.route) {
+                        NewPostScreen(viewModel = newPostViewModel)
                     }
                 }
             }

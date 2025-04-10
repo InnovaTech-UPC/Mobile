@@ -48,7 +48,7 @@ class AdvisorPostsViewModel(private val navController: NavController, private va
     }
 
     fun goToCreatePost() {
-        navController.navigate(Routes.CreatePost.route)
+        navController.navigate(Routes.NewPost.route)
     }
 
     fun goBack() {
