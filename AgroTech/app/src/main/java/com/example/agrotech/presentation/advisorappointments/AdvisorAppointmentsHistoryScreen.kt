@@ -1,5 +1,6 @@
 package com.example.agrotech.presentation.advisorappointments
 
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -35,7 +35,7 @@ import com.example.agrotech.common.GlobalVariables
 
 
 @Composable
-fun AdvisorAppointmentsScreen(
+fun AdvisorAppointmentsHistoryScreen(
     viewModel: AdvisorAppointmentsViewModel
 ) {
     val appointments = viewModel.appointments
@@ -46,7 +46,7 @@ fun AdvisorAppointmentsScreen(
 
     LaunchedEffect(GlobalVariables.USER_ID, GlobalVariables.TOKEN) {
         if (GlobalVariables.USER_ID != 0L && GlobalVariables.TOKEN.isNotBlank()) {
-            viewModel.loadAppointmentsAgain() // deberías exponer una función pública en el VM para volver a cargar
+            viewModel.loadAppointmentsCompletedAgain()
         }
     }
 
@@ -72,19 +72,11 @@ fun AdvisorAppointmentsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Citas",
+                    text = "Historial",
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.titleLarge
-                )
-            }
-            IconButton(onClick = { viewModel.goToAdvisorAppointmentsHistory() }) {
-                Icon(
-                    imageVector = Icons.Default.History,
-                    contentDescription = "History",
-                    modifier = Modifier
-                        .size(32.dp)
                 )
             }
             IconButton(onClick = { viewModel.setExpanded(true) }) {

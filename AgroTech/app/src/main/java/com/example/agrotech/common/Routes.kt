@@ -33,5 +33,7 @@ sealed class Routes(val route: String) {
     data object CreateAccountAdvisor : Routes("CreateAccountAdvisor")
     data object CreateProfileAdvisor : Routes("CreateProfileAdvisor")
     data object ConfirmCreationAccountAdvisor : Routes("ConfirmCreationAccountAdvisor")
-    data object AppointmentsAdvisorList : Routes("AdvisorAppointmentList")
+    data object AppointmentsAdvisorList : Routes("AppointmentsAdvisorList")
+    data object AppointmentsAdvisorHistoryList : Routes("AppointmentsAdvisorHistoryList")
+
 }

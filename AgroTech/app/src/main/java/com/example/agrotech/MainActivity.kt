@@ -30,6 +30,7 @@ import com.example.agrotech.data.repository.notification.NotificationRepository
 import com.example.agrotech.data.repository.post.PostRepository
 import com.example.agrotech.data.repository.profile.CloudStorageRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
+import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsHistoryScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailScreen
@@ -205,6 +206,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.AppointmentsAdvisorList.route) {
                         AdvisorAppointmentsScreen(viewModel = advisorAppointmentsViewModel)
+                    }
+                    composable(route = Routes.AppointmentsAdvisorHistoryList.route) {
+                        AdvisorAppointmentsHistoryScreen(viewModel = advisorAppointmentsViewModel)
                     }
                     composable(route = Routes.FarmerAppointmentList.route) {
                         FarmerAppointmentListScreen(viewModel = farmerAppointmentListViewModel)

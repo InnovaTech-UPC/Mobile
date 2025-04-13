@@ -48,12 +48,13 @@ class AdvisorAppointmentsViewModel(
     private val _expanded = mutableStateOf(false)
     val expanded: State<Boolean> get() = _expanded
 
-    init {
-        loadAppointments()
-    }
 
     fun loadAppointmentsAgain() {
         loadAppointments()
+    }
+
+    fun loadAppointmentsCompletedAgain() {
+        loadAppointmentsCompleted()
     }
 
 
@@ -84,15 +85,55 @@ class AdvisorAppointmentsViewModel(
         }
     }
 
+    private fun loadAppointmentsCompleted() {
+        viewModelScope.launch {
+            if (GlobalVariables.TOKEN.isBlank() || GlobalVariables.USER_ID == 0L) {
+                errorMessage = "Usuario no autenticado"
+                return@launch
+            }
+
+            isLoading = true
+            try {
+                val advisorResult = advisorRepository.searchAdvisorByUserId(GlobalVariables.USER_ID, GlobalVariables.TOKEN)
+                if (advisorResult is Resource.Success) {
+                    advisorId = advisorResult.data?.id
+                    advisorId?.let {
+                        fetchAppointmentsCompleted(it)
+                        fetchFarmerNamesAndImages()
+                    }
+                } else {
+                    errorMessage = advisorResult.message
+                }
+            } catch (e: Exception) {
+                errorMessage = "Error cargando citas: ${e.localizedMessage}"
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
     private suspend fun fetchAppointments(advisorId: Long) {
         val appointmentsResult = appointmentRepository.getAppointmentsByAdvisor(advisorId, GlobalVariables.TOKEN)
 
         if (appointmentsResult is Resource.Success) {
-            appointments = appointmentsResult.data ?: emptyList()
+            val allAppointments = appointmentsResult.data ?: emptyList()
+            appointments = allAppointments.filter { it.status == "PENDING" }
         } else {
             errorMessage = appointmentsResult.message
         }
     }
+
+    private suspend fun fetchAppointmentsCompleted(advisorId: Long) {
+        val appointmentsResult = appointmentRepository.getAppointmentsByAdvisor(advisorId, GlobalVariables.TOKEN)
+
+        if (appointmentsResult is Resource.Success) {
+            val allAppointments = appointmentsResult.data ?: emptyList()
+            appointments = allAppointments.filter { it.status == "COMPLETED" }
+        } else {
+            errorMessage = appointmentsResult.message
+        }
+    }
+
 
     private suspend fun fetchFarmerNamesAndImages() {
         val farmersNamesMap = mutableMapOf<Long, String>()
@@ -138,7 +179,7 @@ class AdvisorAppointmentsViewModel(
         navController.popBackStack()
     }
     fun goToAdvisorAppointmentsHistory(){
-        //
+        navController.navigate(Routes.AppointmentsAdvisorHistoryList.route)
     }
     private fun goToWelcomeSection() {
         navController.navigate(Routes.Welcome.route)
