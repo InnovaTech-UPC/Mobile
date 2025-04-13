@@ -30,6 +30,8 @@ import com.example.agrotech.data.repository.notification.NotificationRepository
 import com.example.agrotech.data.repository.post.PostRepository
 import com.example.agrotech.data.repository.profile.CloudStorageRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
+import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsScreen
+import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailScreen
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailViewModel
 import com.example.agrotech.presentation.advisorhome.AdvisorHomeScreen
@@ -141,6 +143,7 @@ class MainActivity : ComponentActivity() {
                 val advisorHomeViewModel = AdvisorHomeViewModel(navController, advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
                 val advisorListViewModel = AdvisorListViewModel(navController, profileRepository, advisorRepository)
                 val advisorDetailViewModel = AdvisorDetailViewModel(navController, profileRepository, advisorRepository, availableDateRepository)
+                val advisorAppointmentsViewModel = AdvisorAppointmentsViewModel(navController, authenticationRepository, advisorRepository, appointmentRepository, profileRepository, farmerRepository)
                 val reviewListViewModel = ReviewListViewModel(navController, reviewRepository, profileRepository, farmerRepository, advisorRepository)
                 val newAppointmentViewModel = NewAppointmentViewModel(navController, availableDateRepository, appointmentRepository, farmerRepository)
                 val farmerAppointmentListViewModel = FarmerAppointmentListViewModel(navController, profileRepository, advisorRepository, appointmentRepository, farmerRepository)
@@ -199,6 +202,9 @@ class MainActivity : ComponentActivity() {
                         NewAppointmentSuccessScreen {
                             navController.navigate(Routes.FarmerAppointmentList.route)
                         }
+                    }
+                    composable(route = Routes.AppointmentsAdvisorList.route) {
+                        AdvisorAppointmentsScreen(viewModel = advisorAppointmentsViewModel)
                     }
                     composable(route = Routes.FarmerAppointmentList.route) {
                         FarmerAppointmentListScreen(viewModel = farmerAppointmentListViewModel)

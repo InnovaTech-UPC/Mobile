@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,15 +31,6 @@ fun AppointmentCardAdvisorList(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Text(
-                text = "Tu próxima cita",
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-
-
             appointments.forEachIndexed { index, appointment ->
                 val farmerName = farmerNames[appointment.id] ?: "Nombre no disponible"
                 val farmerImageUrl = farmerImagesUrl[appointment.id] ?: ""

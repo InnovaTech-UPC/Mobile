@@ -185,7 +185,9 @@ class AdvisorHomeViewModel(
     fun goToNotificationList() {
         navController.navigate(Routes.NotificationList.route)
     }
-
+    fun goToAppointmentsAdvisorList() {
+        navController.navigate(Routes.AppointmentsAdvisorList.route)
+    }
     fun goToPosts() {
         navController.navigate(Routes.AdvisorPosts.route)
     }

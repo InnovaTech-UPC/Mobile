@@ -44,7 +44,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
         CardItem(
             image = painterResource(id = R.drawable.icon_appointments),
             text = "Citas",
-            onClick = { viewModel.goToNotificationList() }
+            onClick = { viewModel.goToAppointmentsAdvisorList() }
         ),
     )
 
@@ -170,12 +170,6 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
         )
 
         if (advisorId != null && upcomingAppointments.isNotEmpty()) {
-            AppointmentCardAdvisorList(
-                appointments = upcomingAppointments,
-                farmerNames = farmerNames,
-                farmerImagesUrl = farmerImagesUrl
-            )
-        } else {
             Text(
                 text = "Tu próxima cita",
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
@@ -183,6 +177,12 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge
             )
+            AppointmentCardAdvisorList(
+                appointments = upcomingAppointments,
+                farmerNames = farmerNames,
+                farmerImagesUrl = farmerImagesUrl
+            )
+        } else {
             Text(
                 text = "No tienes citas programadas",
                 modifier = Modifier.padding(bottom = 16.dp),
