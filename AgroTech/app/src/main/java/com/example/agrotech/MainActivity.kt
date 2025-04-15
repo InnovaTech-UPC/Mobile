@@ -30,6 +30,8 @@ import com.example.agrotech.data.repository.notification.NotificationRepository
 import com.example.agrotech.data.repository.post.PostRepository
 import com.example.agrotech.data.repository.profile.CloudStorageRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
+import com.example.agrotech.presentation.advisorappointmentdetail.AdvisorAppointmentDetailScreen
+import com.example.agrotech.presentation.advisorappointmentdetail.AdvisorAppointmentDetailViewModel
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsHistoryScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
@@ -144,6 +146,7 @@ class MainActivity : ComponentActivity() {
                 val advisorHomeViewModel = AdvisorHomeViewModel(navController, advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
                 val advisorListViewModel = AdvisorListViewModel(navController, profileRepository, advisorRepository)
                 val advisorDetailViewModel = AdvisorDetailViewModel(navController, profileRepository, advisorRepository, availableDateRepository)
+                val advisorAppointmentDetailViewModel = AdvisorAppointmentDetailViewModel(navController, appointmentRepository, profileRepository, farmerRepository, authenticationRepository)
                 val advisorAppointmentsViewModel = AdvisorAppointmentsViewModel(navController, authenticationRepository, advisorRepository, appointmentRepository, profileRepository, farmerRepository)
                 val reviewListViewModel = ReviewListViewModel(navController, reviewRepository, profileRepository, farmerRepository, advisorRepository)
                 val newAppointmentViewModel = NewAppointmentViewModel(navController, availableDateRepository, appointmentRepository, farmerRepository)
@@ -206,6 +209,11 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.AppointmentsAdvisorList.route) {
                         AdvisorAppointmentsScreen(viewModel = advisorAppointmentsViewModel)
+                    }
+                    composable(route = Routes.AdvisorAppointmentDetail.route + "/{appointmentId}") {
+                        val appointmentId = it.arguments?.getString("appointmentId")?.toLong() ?: 0
+                        AdvisorAppointmentDetailScreen(viewModel = advisorAppointmentDetailViewModel, appointmentId = appointmentId)
+
                     }
                     composable(route = Routes.AppointmentsAdvisorHistoryList.route) {
                         AdvisorAppointmentsHistoryScreen(viewModel = advisorAppointmentsViewModel)

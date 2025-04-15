@@ -182,6 +182,9 @@ class AdvisorHomeViewModel(
     private fun goToWelcomeSection() {
         navController.navigate(Routes.Welcome.route)
     }
+    fun goToAppointmentDetails(appointmentId: Long) {
+        navController.navigate(Routes.AdvisorAppointmentDetail.route + "/$appointmentId")
+    }
     fun goToNotificationList() {
         navController.navigate(Routes.NotificationList.route)
     }

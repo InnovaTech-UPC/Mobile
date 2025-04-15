@@ -180,7 +180,10 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
             AppointmentCardAdvisorList(
                 appointments = upcomingAppointments,
                 farmerNames = farmerNames,
-                farmerImagesUrl = farmerImagesUrl
+                farmerImagesUrl = farmerImagesUrl,
+                onAppointmentClick = { appointment ->
+                    viewModel.goToAppointmentDetails(appointment.id)
+                }
             )
         } else {
             Text(

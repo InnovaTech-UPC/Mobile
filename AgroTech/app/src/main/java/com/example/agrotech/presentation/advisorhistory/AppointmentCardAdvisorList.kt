@@ -11,8 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.agrotech.domain.appointment.Appointment
 
@@ -20,7 +18,8 @@ import com.example.agrotech.domain.appointment.Appointment
 fun AppointmentCardAdvisorList(
     appointments: List<Appointment>,
     farmerNames: Map<Long, String>,
-    farmerImagesUrl: Map<Long, String>
+    farmerImagesUrl: Map<Long, String>,
+    onAppointmentClick: (Appointment) -> Unit // Pass a lambda for navigation
 ) {
     Column(
         modifier = Modifier
@@ -38,7 +37,8 @@ fun AppointmentCardAdvisorList(
                 AppointmentCardAdvisor(
                     appointment = appointment,
                     farmerName = farmerName,
-                    farmerImageUrl = farmerImageUrl
+                    farmerImageUrl = farmerImageUrl,
+                    onClick = { onAppointmentClick(appointment) } // Pass the click action
                 )
 
                 if (index < appointments.size - 1) {
