@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -32,6 +33,7 @@ import com.example.agrotech.data.repository.profile.CloudStorageRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.presentation.advisorappointmentdetail.AdvisorAppointmentDetailScreen
 import com.example.agrotech.presentation.advisorappointmentdetail.AdvisorAppointmentDetailViewModel
+import com.example.agrotech.presentation.advisorappointmentdetail.CancelAppointmentAdvisorSuccessScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsHistoryScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
@@ -251,6 +253,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.CreateProfileFarmer.route) {
                         CreateProfileFarmerScreen(viewModel = createProfileFarmerViewModel)
+                    }
+                    composable(route = Routes.ConfirmDeletionAppointmentAdvisor.route) {
+                        CancelAppointmentAdvisorSuccessScreen(viewModel = advisorAppointmentDetailViewModel)
                     }
                     composable(route = Routes.ConfirmCreationAccountAdvisor.route) {
                         ConfirmCreationAccountAdvisorScreen(viewModel = confirmCreationAccountAdvisorViewModel)

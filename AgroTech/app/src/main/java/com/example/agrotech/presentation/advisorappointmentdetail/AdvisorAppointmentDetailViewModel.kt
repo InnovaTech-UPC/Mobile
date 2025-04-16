@@ -72,13 +72,22 @@ class AdvisorAppointmentDetailViewModel(
     fun setExpanded(value: Boolean) {
         _expanded.value = value
     }
+    fun goToAppointments() {
+        navController.navigate(Routes.AppointmentsAdvisorList.route)
+    }
 
     fun goBack() {
         navController.popBackStack()
     }
-    fun onCancelAppointmentClick() {
-        //por el momento no se hace nada
+    private fun goToCancelAppointmentSuccess() {
+        navController.navigate(Routes.ConfirmDeletionAppointmentAdvisor.route)
     }
+    suspend fun onCancelAppointmentClick() {
+        appointmentRepository.deleteAppointment(appointmentDetail.value?.id ?: 0L, GlobalVariables.TOKEN)
+        goToCancelAppointmentSuccess()
+    }
+
+
     fun signOut() {
         GlobalVariables.ROLES = emptyList()
         viewModelScope.launch {
@@ -91,5 +100,6 @@ class AdvisorAppointmentDetailViewModel(
             goToWelcomeSection()
         }
     }
+
 
 }

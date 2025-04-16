@@ -20,20 +20,21 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.agrotech.presentation.advisorhistory.AppointmentCardAdvisor
+import kotlinx.coroutines.launch
 
 @Composable
 fun AdvisorAppointmentDetailScreen(
     appointmentId: Long,
     viewModel: AdvisorAppointmentDetailViewModel = viewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(appointmentId) {
         viewModel.loadAppointmentDetails(appointmentId)
     }
 
     val appointment = viewModel.appointmentDetail.value
     val isExpanded = viewModel.expanded.value
-
 
     if (appointment != null) {
         Column(
@@ -162,7 +163,11 @@ fun AdvisorAppointmentDetailScreen(
             Spacer(modifier = Modifier.height(25.dp))
             // Botón para cancelar la cita
             Button(
-                onClick = { viewModel.onCancelAppointmentClick() },
+                onClick = {
+                    coroutineScope.launch {
+                        viewModel.onCancelAppointmentClick()
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                 modifier = Modifier
                     .fillMaxWidth()
