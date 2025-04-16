@@ -6,6 +6,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,10 +33,12 @@ fun AdvisorAppointmentDetailScreen(
 
     LaunchedEffect(appointmentId) {
         viewModel.loadAppointmentDetails(appointmentId)
+        viewModel.loadReviewForAppointment(appointmentId)
     }
 
     val appointment = viewModel.appointmentDetail.value
     val isExpanded = viewModel.expanded.value
+    val review = viewModel.appointmentReviews.value[appointmentId]
 
     if (appointment != null) {
         Column(
@@ -137,47 +141,88 @@ fun AdvisorAppointmentDetailScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(25.dp))
-            Text(
-                text = "Comentario del usuario",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        shape = MaterialTheme.shapes.medium
+            if (appointment.status != "COMPLETED") {
+                Spacer(modifier = Modifier.height(25.dp))
+                Text(
+                    text = "Comentario del usuario",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold
                     )
-                    .padding(12.dp)
-            ) {
-                Text(
-                    text = appointment.message ?: "No disponible",
-                    style = MaterialTheme.typography.bodyLarge
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                        .border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = appointment.message ?: "No disponible",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
-            Spacer(modifier = Modifier.height(25.dp))
-            // Botón para cancelar la cita
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        viewModel.onCancelAppointmentClick()
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-            ) {
+
+            if (appointment.status == "COMPLETED") {
+                Spacer(modifier = Modifier.height(25.dp))
                 Text(
-                    text = "Cancelar Cita",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    text = "Calificación brindada por el usuario",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    )
                 )
+                RatingBar(
+                    currentRating = review?.second ?: 0,
+                    onRatingChange = {} // Empty lambda since this is for display only
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Comentario",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                        .border(
+                            width = 1.dp,
+                            color = Color.Gray,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = review?.first ?: "No disponible",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+
+            if (appointment.status != "COMPLETED") {
+                Spacer(modifier = Modifier.height(25.dp))
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            viewModel.onCancelAppointmentClick()
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                ) {
+                    Text(
+                        text = "Cancelar Cita",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     } else {
@@ -186,6 +231,21 @@ fun AdvisorAppointmentDetailScreen(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+fun RatingBar(currentRating: Int, onRatingChange: (Int) -> Unit) {
+    Row(modifier = Modifier.padding(8.dp), horizontalArrangement = Arrangement.Center) {
+        for (i in 1..5) {
+            IconButton(onClick = { onRatingChange(i) }) {
+                Icon(
+                    imageVector = if (i <= currentRating) Icons.Default.Star else Icons.Default.StarOutline,
+                    contentDescription = "Calificación $i",
+                    tint = if (i <= currentRating) Color(0xFFE4A70A) else Color.Gray
+                )
+            }
         }
     }
 }
