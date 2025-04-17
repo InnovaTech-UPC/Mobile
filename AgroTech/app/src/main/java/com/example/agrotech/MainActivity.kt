@@ -37,6 +37,8 @@ import com.example.agrotech.presentation.advisorappointmentdetail.CancelAppointm
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsHistoryScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsScreen
 import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
+import com.example.agrotech.presentation.advisoravailabledates.AdvisorAvailableDatesScreen
+import com.example.agrotech.presentation.advisoravailabledates.AdvisorAvailableDatesViewModel
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailScreen
 import com.example.agrotech.presentation.advisordetail.AdvisorDetailViewModel
 import com.example.agrotech.presentation.advisorhome.AdvisorHomeScreen
@@ -146,6 +148,7 @@ class MainActivity : ComponentActivity() {
                 val restorePasswordViewModel = RestorePasswordViewModel(navController)
                 val farmerHomeViewModel = FarmerHomeViewModel(navController, profileRepository, authenticationRepository, appointmentRepository, farmerRepository, advisorRepository, notificationRepository)
                 val advisorHomeViewModel = AdvisorHomeViewModel(navController, advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
+                val advisorAvailableDatesViewModel = AdvisorAvailableDatesViewModel(navController, availableDateRepository, advisorRepository)
                 val advisorListViewModel = AdvisorListViewModel(navController, profileRepository, advisorRepository)
                 val advisorDetailViewModel = AdvisorDetailViewModel(navController, profileRepository, advisorRepository, availableDateRepository)
                 val advisorAppointmentDetailViewModel = AdvisorAppointmentDetailViewModel(navController, appointmentRepository, profileRepository, farmerRepository, reviewRepository, authenticationRepository)
@@ -188,6 +191,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.AdvisorHome.route) {
                         AdvisorHomeScreen(viewModel = advisorHomeViewModel)
+                    }
+                    composable(route = Routes.AdvisorAvailableDates.route) {
+                        AdvisorAvailableDatesScreen(viewModel = advisorAvailableDatesViewModel)
                     }
                     composable(route = Routes.AdvisorList.route) {
                         AdvisorListScreen(viewModel = advisorListViewModel)

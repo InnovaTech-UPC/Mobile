@@ -26,6 +26,7 @@ sealed class Routes(val route: String) {
     // Advisor
     data object AdvisorHome : Routes("AdvisorHome")
     data object AdvisorList : Routes("AdvisorList")
+    data object AdvisorAvailableDates : Routes("AdvisorAvailableDates")
     data object AdvisorDetail : Routes("AdvisorDetail")
     data object AdvisorPosts : Routes("AdvisorPosts")
     data object AdvisorPostDetail : Routes("AdvisorPostDetail")
