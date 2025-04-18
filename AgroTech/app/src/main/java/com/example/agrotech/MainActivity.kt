@@ -54,6 +54,8 @@ import com.example.agrotech.presentation.advisorposts.AdvisorPostsScreen
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel
 import com.example.agrotech.presentation.advisorprofile.AdvisorProfileScreen
 import com.example.agrotech.presentation.advisorprofile.AdvisorProfileViewModel
+import com.example.agrotech.presentation.animaldetails.AnimalDetailsScreen
+import com.example.agrotech.presentation.animaldetails.AnimalDetailsViewModel
 import com.example.agrotech.presentation.animallist.AnimalListScreen
 import com.example.agrotech.presentation.animallist.AnimalListViewModel
 import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorScreen
@@ -181,7 +183,7 @@ class MainActivity : ComponentActivity() {
                 val newPostViewModel = NewPostViewModel(navController, postRepository, advisorRepository, cloudStorageRepository)
                 val enclosureListViewModel = EnclosureListViewModel(navController, enclosureRepository, farmerRepository)
                 val animalListViewModel = AnimalListViewModel(navController, animalRepository, enclosureRepository)
-
+                val animalDetailsViewModel = AnimalDetailsViewModel(navController, animalRepository)
                 //Navigation
                 NavHost(navController = navController, startDestination = Routes.Welcome.route) {
                     composable(route = Routes.Welcome.route) {
@@ -237,6 +239,10 @@ class MainActivity : ComponentActivity() {
                         val enclosureId = it.arguments?.getString("enclosureId")?.toLong() ?: 0
                         AnimalListScreen(viewModel = animalListViewModel, enclosureId = enclosureId)
 
+                    }
+                    composable(route = Routes.AnimalDetail.route + "/{animalId}") {
+                        val animalId = it.arguments?.getString("animalId")?.toLong() ?: 0
+                        AnimalDetailsScreen(viewModel = animalDetailsViewModel, animalId = animalId)
                     }
                     composable(route = Routes.FarmerAppointmentList.route) {
                         FarmerAppointmentListScreen(viewModel = farmerAppointmentListViewModel)

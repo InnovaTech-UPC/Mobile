@@ -215,11 +215,9 @@ fun AnimalListItem(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("🐮 ${animal.name}", fontWeight = FontWeight.Bold)
-            Text("🧬 Especie: ${animal.species}")
-            Text("🏷️ Raza: ${animal.breed}")
-            Text("⚖️ Peso: ${animal.weight} kg")
-            Text("🩺 Estado de salud: ${healthStatusTranslation[animal.health] ?: animal.health}")
             Text("🎂 Edad: ${animal.age} años")
+            Text("🧬 Especie: ${animal.species}")
+            Text("🩺 Estado de salud: ${healthStatusTranslation[animal.health] ?: animal.health}")
         }
     }
 }

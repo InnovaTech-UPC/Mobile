@@ -74,7 +74,7 @@ class AnimalListViewModel(
             if (result is Resource.Success) {
                 _state.value = UIState(data = result.data)
             } else {
-                _state.value = UIState(message = "Error fetching animals")
+                _state.value = UIState(message = "Error obteniendo los animales")
             }
         }
     }
@@ -89,7 +89,7 @@ class AnimalListViewModel(
                 _enclosureCapacity.intValue = result.data?.capacity ?: 0
                 _enclosureType.value = result.data?.type ?: ""
             } else {
-                _enclosure.value = UIState(message = "Error fetching enclosure")
+                _enclosure.value = UIState(message = "Error obteniendo el recinto")
             }
         }
     }
