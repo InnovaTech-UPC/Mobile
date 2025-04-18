@@ -54,6 +54,8 @@ import com.example.agrotech.presentation.advisorposts.AdvisorPostsScreen
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel
 import com.example.agrotech.presentation.advisorprofile.AdvisorProfileScreen
 import com.example.agrotech.presentation.advisorprofile.AdvisorProfileViewModel
+import com.example.agrotech.presentation.animallist.AnimalListScreen
+import com.example.agrotech.presentation.animallist.AnimalListViewModel
 import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorScreen
 import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorViewModel
 import com.example.agrotech.presentation.farmerappointmentdetail.CancelAppointmentSuccessScreen
@@ -125,7 +127,8 @@ class MainActivity : ComponentActivity() {
         val notificationService = retrofit.create(NotificationService::class.java)
         val postService = retrofit.create(PostService::class.java)
         val authenticationService = retrofit.create(AuthenticationService::class.java)
-
+        val enclosureService = retrofit.create(EnclosureService::class.java)
+        val animalService = retrofit.create(AnimalService::class.java)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -143,6 +146,8 @@ class MainActivity : ComponentActivity() {
                 val postRepository = PostRepository(postService)
                 val cloudStorageRepository = CloudStorageRepository()
                 val authenticationRepository = AuthenticationRepository(authenticationService, userDao)
+                val enclosureRepository = EnclosureRepository(enclosureService)
+                val animalRepository = AnimalRepository(animalService)
 
                 // View Models
                 val welcomeViewModel = WelcomeViewModel(navController, authenticationRepository, advisorRepository)
@@ -174,6 +179,9 @@ class MainActivity : ComponentActivity() {
                 val advisorPostsViewModel = AdvisorPostsViewModel(navController, postRepository, advisorRepository)
                 val advisorPostDetailViewModel = AdvisorPostDetailViewModel(navController, postRepository)
                 val newPostViewModel = NewPostViewModel(navController, postRepository, advisorRepository, cloudStorageRepository)
+                val enclosureListViewModel = EnclosureListViewModel(navController, enclosureRepository, farmerRepository)
+                val animalListViewModel = AnimalListViewModel(navController, animalRepository)
+
                 //Navigation
                 NavHost(navController = navController, startDestination = Routes.Welcome.route) {
                     composable(route = Routes.Welcome.route) {
@@ -221,6 +229,14 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.AppointmentsAdvisorHistoryList.route) {
                         AdvisorAppointmentsHistoryScreen(viewModel = advisorAppointmentsViewModel)
+                    }
+                    composable(route = Routes.EnclosureList.route) {
+                        EnclosureListScreen(viewModel = enclosureListViewModel)
+                    }
+                    composable(route = Routes.AnimalList.route + "/{enclosureId}") {
+                        val enclosureId = it.arguments?.getString("enclosureId")?.toLong() ?: 0
+                        AnimalListScreen(viewModel = animalListViewModel, enclosureId = enclosureId)
+
                     }
                     composable(route = Routes.FarmerAppointmentList.route) {
                         FarmerAppointmentListScreen(viewModel = farmerAppointmentListViewModel)

@@ -1,4 +1,4 @@
-package com.example.agrotech.presentation.DatePickerFragment
+package com.example.agrotech.presentation.datepickerfragment
 
 import android.app.DatePickerDialog
 import android.os.Bundle

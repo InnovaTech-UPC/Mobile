@@ -11,7 +11,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AnimalService {
-    @GET("animals/{enclosureId}")
+    @GET("animals")
     suspend fun getAnimalsByEnclosureId(
         @Header("Authorization") token: String,
         @Query("enclosureId") enclosureId: Long

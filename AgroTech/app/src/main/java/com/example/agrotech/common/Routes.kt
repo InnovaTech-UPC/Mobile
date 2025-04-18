@@ -9,6 +9,10 @@ sealed class Routes(val route: String) {
     // Farmer
     data object FarmerHome : Routes("FarmerHome")
     data object ReviewList : Routes("ReviewList")
+    data object EnclosureList : Routes("EnclosureList")
+    data object AnimalList : Routes("AnimalList")
+    data object AnimalDetail : Routes("AnimalDetail")
+    data object CreateAnimal : Routes("CreateAnimal")
     data object NewAppointment : Routes("NewAppointment")
     data object NewAppointmentConfirmation : Routes("NewAppointmentConfirmation")
     data object FarmerAppointmentList : Routes("FarmerAppointmentList")
