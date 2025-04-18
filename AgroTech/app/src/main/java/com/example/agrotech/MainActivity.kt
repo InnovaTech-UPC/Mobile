@@ -142,7 +142,7 @@ class MainActivity : ComponentActivity() {
                 val authenticationRepository = AuthenticationRepository(authenticationService, userDao)
 
                 // View Models
-                val welcomeViewModel = WelcomeViewModel(navController, authenticationRepository)
+                val welcomeViewModel = WelcomeViewModel(navController, authenticationRepository, advisorRepository)
                 val loginViewModel = LoginViewModel(navController, authenticationRepository, advisorRepository)
                 val forgotPasswordViewModel = ForgotPasswordViewModel(navController)
                 val restorePasswordViewModel = RestorePasswordViewModel(navController)
