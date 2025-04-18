@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.agrosupport"
+    namespace = "com.example.agrotech"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.agrosupport"
+        applicationId = "com.example.agrotech"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.protolite.well.known.types)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.firebase.storage.ktx)
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.common.ktx)
@@ -84,4 +85,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("script-runtime"))
 }
