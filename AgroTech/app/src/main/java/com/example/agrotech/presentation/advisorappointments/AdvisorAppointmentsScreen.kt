@@ -109,8 +109,8 @@ fun AdvisorAppointmentsScreen(
                         )
                     },
                     onClick = {
-                        // viewModel.goToProfile()
-                        // viewModel.setExpanded(false)
+                        viewModel.goToProfile()
+                        viewModel.setExpanded(false)
                     }
                 )
                 DropdownMenuItem(

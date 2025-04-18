@@ -47,7 +47,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
             onClick = { viewModel.goToAppointmentsAdvisorList() }
         ),
         CardItem(
-            image = painterResource(id = R.drawable.icon_appointments),
+            image = painterResource(id = R.drawable.icon_available_date),
             text = "Mis horarios",
             onClick = { viewModel.goToAvailableDates() }
         )

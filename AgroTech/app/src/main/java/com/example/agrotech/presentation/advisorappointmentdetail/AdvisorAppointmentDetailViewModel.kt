@@ -110,6 +110,10 @@ class AdvisorAppointmentDetailViewModel(
         navController.navigate(Routes.AppointmentsAdvisorList.route)
     }
 
+    fun goToProfile() {
+        navController.navigate(Routes.AdvisorProfile.route)
+    }
+
     fun goBack() {
         navController.popBackStack()
     }
