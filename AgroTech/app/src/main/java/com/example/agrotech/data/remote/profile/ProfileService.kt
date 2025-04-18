@@ -20,6 +20,6 @@ interface ProfileService {
     @GET("profiles/advisors")
     suspend fun getAdvisors(@Header("Authorization") token: String): Response<List<ProfileDto>>
 
-    @PUT("profiles/{userId}")
-    suspend fun updateProfile(@Path("userId") userId: Long, @Header("Authorization") token: String, @Body profile: UpdateProfile): Response<ProfileDto>
+    @PUT("profiles/{id}")
+    suspend fun updateProfile(@Path("id") id: Long, @Header("Authorization") token: String, @Body profile: UpdateProfile): Response<ProfileDto>
 }

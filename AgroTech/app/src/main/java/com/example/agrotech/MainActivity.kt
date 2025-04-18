@@ -49,6 +49,8 @@ import com.example.agrotech.presentation.advisorpostdetail.AdvisorPostDetailScre
 import com.example.agrotech.presentation.advisorpostdetail.AdvisorPostDetailViewModel
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsScreen
 import com.example.agrotech.presentation.advisorposts.AdvisorPostsViewModel
+import com.example.agrotech.presentation.advisorprofile.AdvisorProfileScreen
+import com.example.agrotech.presentation.advisorprofile.AdvisorProfileViewModel
 import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorScreen
 import com.example.agrotech.presentation.confirmcreationaccountadvisor.ConfirmCreationAccountAdvisorViewModel
 import com.example.agrotech.presentation.farmerappointmentdetail.CancelAppointmentSuccessScreen
@@ -169,6 +171,7 @@ class MainActivity : ComponentActivity() {
                 val notificationListViewModel = NotificationListViewModel(navController, notificationRepository)
                 val explorePostsViewModel = ExplorePostsViewModel(navController, postRepository, profileRepository, advisorRepository)
                 val farmerProfileViewModel = FarmerProfileViewModel(navController, profileRepository, cloudStorageRepository)
+                val advisorProfileViewModel = AdvisorProfileViewModel(navController, profileRepository, cloudStorageRepository)
                 val advisorPostsViewModel = AdvisorPostsViewModel(navController, postRepository, advisorRepository)
                 val advisorPostDetailViewModel = AdvisorPostDetailViewModel(navController, postRepository)
                 val newPostViewModel = NewPostViewModel(navController, postRepository, advisorRepository, cloudStorageRepository)
@@ -277,6 +280,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.FarmerProfile.route) {
                         FarmerProfileScreen(viewModel = farmerProfileViewModel)
+                    }
+                    composable(route = Routes.AdvisorProfile.route) {
+                        AdvisorProfileScreen(viewModel = advisorProfileViewModel)
                     }
                     composable(route = Routes.AdvisorPosts.route) {
                         AdvisorPostsScreen(viewModel = advisorPostsViewModel)

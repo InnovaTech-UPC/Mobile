@@ -135,8 +135,8 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                         )
                     },
                     onClick = {
-                        // viewModel.goToProfile()
-                        // viewModel.setExpanded(false)
+                        viewModel.goToProfile()
+                        viewModel.setExpanded(false)
                     }
                 )
                 DropdownMenuItem(

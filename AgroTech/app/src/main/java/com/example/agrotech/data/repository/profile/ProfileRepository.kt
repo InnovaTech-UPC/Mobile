@@ -122,12 +122,12 @@ class ProfileRepository(private val profileService: ProfileService) {
         return@withContext Resource.Error(response.message())
     }
 
-    suspend fun updateProfile(userId: Long, token: String, profile: UpdateProfile): Resource<Profile> = withContext(Dispatchers.IO) {
+    suspend fun updateProfile(id: Long, token: String, profile: UpdateProfile): Resource<Profile> = withContext(Dispatchers.IO) {
         if (token.isBlank()) {
             return@withContext Resource.Error(message = "Un token es requerido")
         }
         val bearerToken = "Bearer $token"
-        val response = profileService.updateProfile(userId, bearerToken, profile)
+        val response = profileService.updateProfile(id, bearerToken, profile)
         if (response.isSuccessful) {
             response.body()?.let { profileDto ->
                 val updatedProfile = profileDto.toProfile()
