@@ -100,19 +100,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
                 PasswordTextField(password, viewModel)
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text(
-                        text = "¿Olvidaste tu contraseña?",
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .clickable { viewModel.goToForgotPasswordScreen() },
-                        color = Color.Black,
-                        fontSize = 14.sp
-                    )
-                }
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = { viewModel.signIn() },

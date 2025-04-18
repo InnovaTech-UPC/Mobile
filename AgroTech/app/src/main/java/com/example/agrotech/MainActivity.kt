@@ -76,8 +76,6 @@ import com.example.agrotech.presentation.farmerhome.FarmerHomeScreen
 import com.example.agrotech.presentation.farmerhome.FarmerHomeViewModel
 import com.example.agrotech.presentation.farmerprofile.FarmerProfileScreen
 import com.example.agrotech.presentation.farmerprofile.FarmerProfileViewModel
-import com.example.agrotech.presentation.forgotpassword.ForgotPasswordScreen
-import com.example.agrotech.presentation.forgotpassword.ForgotPasswordViewModel
 import com.example.agrotech.presentation.login.LoginScreen
 import com.example.agrotech.presentation.login.LoginViewModel
 import com.example.agrotech.presentation.newappointment.NewAppointmentScreen
@@ -89,8 +87,6 @@ import com.example.agrotech.presentation.notificationlist.NotificationListScreen
 import com.example.agrotech.presentation.notificationlist.NotificationListViewModel
 import com.example.agrotech.presentation.rating.FarmerReviewAppointmentScreen
 import com.example.agrotech.presentation.rating.FarmerReviewAppointmentViewModel
-import com.example.agrotech.presentation.restorepassword.RestorePasswordScreen
-import com.example.agrotech.presentation.restorepassword.RestorePasswordViewModel
 import com.example.agrotech.presentation.reviewlist.ReviewListScreen
 import com.example.agrotech.presentation.reviewlist.ReviewListViewModel
 import com.example.agrotech.presentation.signup.CreateAccountScreen
@@ -146,8 +142,6 @@ class MainActivity : ComponentActivity() {
                 // View Models
                 val welcomeViewModel = WelcomeViewModel(navController, authenticationRepository, advisorRepository)
                 val loginViewModel = LoginViewModel(navController, authenticationRepository, advisorRepository)
-                val forgotPasswordViewModel = ForgotPasswordViewModel(navController)
-                val restorePasswordViewModel = RestorePasswordViewModel(navController)
                 val farmerHomeViewModel = FarmerHomeViewModel(navController, profileRepository, authenticationRepository, appointmentRepository, farmerRepository, advisorRepository, notificationRepository)
                 val advisorHomeViewModel = AdvisorHomeViewModel(navController, advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
                 val advisorAvailableDatesViewModel = AdvisorAvailableDatesViewModel(navController, availableDateRepository, advisorRepository, authenticationRepository)
@@ -182,12 +176,6 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.SignIn.route) {
                         LoginScreen(viewModel = loginViewModel)
-                    }
-                    composable(route = Routes.ForgotPassword.route) {
-                        ForgotPasswordScreen(viewModel = forgotPasswordViewModel)
-                    }
-                    composable(route = Routes.RestorePassword.route) {
-                        RestorePasswordScreen(viewModel = restorePasswordViewModel)
                     }
                     composable(route = Routes.FarmerHome.route) {
                         FarmerHomeScreen(viewModel = farmerHomeViewModel)
