@@ -105,7 +105,7 @@ class EnclosureListViewModel(
         _type.value = type
     }
 
-    fun validateEnclosure(): Boolean {
+    private fun validateEnclosure(): Boolean {
         return name.isNotEmpty() && capacity > 0 && type.isNotEmpty()
     }
 

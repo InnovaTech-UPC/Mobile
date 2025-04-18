@@ -10,7 +10,7 @@ class Animal (
     val species: String,
     val breed: String,
     val weight: Float,
-    val healthStatus: String
+    val health: String
 )
 
 fun Animal.toAnimalDto() = AnimalDto(
@@ -21,5 +21,5 @@ fun Animal.toAnimalDto() = AnimalDto(
     species = species,
     breed = breed,
     weight = weight,
-    healthStatus = healthStatus
+    health = health
 )

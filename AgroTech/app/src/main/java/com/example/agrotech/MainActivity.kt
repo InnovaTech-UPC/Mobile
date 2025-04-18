@@ -180,7 +180,7 @@ class MainActivity : ComponentActivity() {
                 val advisorPostDetailViewModel = AdvisorPostDetailViewModel(navController, postRepository)
                 val newPostViewModel = NewPostViewModel(navController, postRepository, advisorRepository, cloudStorageRepository)
                 val enclosureListViewModel = EnclosureListViewModel(navController, enclosureRepository, farmerRepository)
-                val animalListViewModel = AnimalListViewModel(navController, animalRepository)
+                val animalListViewModel = AnimalListViewModel(navController, animalRepository, enclosureRepository)
 
                 //Navigation
                 NavHost(navController = navController, startDestination = Routes.Welcome.route) {
