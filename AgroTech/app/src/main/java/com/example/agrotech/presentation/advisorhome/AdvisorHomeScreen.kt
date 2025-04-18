@@ -63,6 +63,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
     val isExpanded = viewModel.expanded.value
 
     val upcomingAppointments = appointments
+        .filter { it.status == "PENDING" || it.status == "ONGOING" }
         .sortedBy { it.scheduledDate }
         .take(1)
 
