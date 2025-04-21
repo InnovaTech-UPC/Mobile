@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -54,7 +55,11 @@ fun AdvisorAvailableDatesScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { showDialog = true }) {
+            FloatingActionButton(
+                onClick = { showDialog = true },
+                containerColor = Color(0xFF092C4C), // Color hexadecimal para el fondo
+                contentColor = Color.White // Color blanco para el texto
+            ) {
                 Text("+")
             }
         }
@@ -202,25 +207,37 @@ fun AdvisorAvailableDatesScreen(
                     }
                 },
                 confirmButton = {
-                    Button(onClick = {
-                        val advisorId = viewModel.advisorId
-                        if (advisorId != null) {
-                            val newDate = AvailableDate(
-                                id = 0L,
-                                advisorId = advisorId,
-                                availableDate = availableDateInput.text,
-                                startTime = startTimeInput.text,
-                                endTime = endTimeInput.text
-                            )
-                            viewModel.createAvailableDate(newDate)
-                            showDialog = false
-                        }
-                    }) {
+                    Button(
+                        onClick = {
+                            val advisorId = viewModel.advisorId
+                            if (advisorId != null) {
+                                val newDate = AvailableDate(
+                                    id = 0L,
+                                    advisorId = advisorId,
+                                    availableDate = availableDateInput.text,
+                                    startTime = startTimeInput.text,
+                                    endTime = endTimeInput.text
+                                )
+                                viewModel.createAvailableDate(newDate)
+                                showDialog = false
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF27AE60), // Verde
+                            contentColor = Color.White // Texto blanco
+                        )
+                    ) {
                         Text("Create")
                     }
                 },
                 dismissButton = {
-                    Button(onClick = { showDialog = false }) {
+                    Button(
+                        onClick = { showDialog = false },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFF84343), // Rojo
+                            contentColor = Color.White // Texto blanco
+                        )
+                    ) {
                         Text("Cancel")
                     }
                 }
