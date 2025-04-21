@@ -67,6 +67,11 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
             text = "Publicaciones",
             onClick = { viewModel.goToExplorePosts() }
         ),
+        CardItem(
+            image = painterResource(id = R.drawable.icon_farm),
+            text = "Mis recintos",
+            onClick = { viewModel.goToEnclosures() }
+        )
     )
     val farmer = viewModel.state.value
     val isExpanded = viewModel.expanded.value
@@ -88,7 +93,6 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleLarge
                 )
-
                 IconButton(onClick = { viewModel.goToNotificationList() }) {
                     BadgedBox(
                         badge = {
@@ -115,9 +119,6 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                         )
                     }
                 }
-
-
-
                 IconButton(onClick = { viewModel.setExpanded(true) }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
@@ -125,14 +126,11 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                         modifier = Modifier.padding(horizontal = 8.dp).size(32.dp)
                     )
                 }
-                // Menú emergente
                 DropdownMenu(
                     expanded = isExpanded,
                     onDismissRequest = { viewModel.setExpanded(false) },
                     offset = DpOffset(x = (2000).dp, y = 0.dp)
                 ) {
-
-
                     DropdownMenuItem(
                         text = {
                             Text(
@@ -149,8 +147,6 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                             viewModel.setExpanded(false)
                         }
                     )
-
-
                     DropdownMenuItem(
                         text = {
                             Text(
@@ -169,13 +165,11 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                     )
                 }
             }
-
             Image(
                     painter = painterResource(id = R.drawable.hero_image),
                     contentDescription = "Hero Image",
                     modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f).padding(bottom = 16.dp)
             )
-
             Text(
                 text = "Tu próxima cita",
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
@@ -183,13 +177,11 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge
             )
-
             when {
                 appointmentCard.isLoading -> {
                     CircularProgressIndicator()
                 }
                 appointmentCard.data == null -> {
-                    // Mostrar texto si no hay citas
                     Text(
                         text = "No tienes citas programadas",
                         modifier = Modifier.padding(8.dp),
@@ -198,7 +190,6 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                     )
                 }
                 else -> {
-                    // Mostrar tarjeta de la cita si hay datos
                     AppointmentCard(
                         appointment = appointmentCard.data,
                         onClick = {
@@ -207,7 +198,6 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                     )
                 }
             }
-
             Text(
                 text = "Elige tu próximo paso",
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
@@ -220,13 +210,12 @@ fun FarmerHomeScreen(viewModel: FarmerHomeViewModel) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
-                    count = 3,
+                    count = cardItems.size,
                     itemContent = { index ->
                         NavigationCard(index, cardItems)
                     }
                 )
             }
-
         }
     }
 }

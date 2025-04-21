@@ -21,37 +21,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.agrotech.R
-import com.example.agrotech.domain.profile.Profile
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
-fun EditProfileContent(profile: Profile, viewModel: FarmerProfileViewModel) {
-    var firstName by remember { mutableStateOf(profile.firstName) }
-    var lastName by remember { mutableStateOf(profile.lastName) }
-    var birthDate by remember { mutableStateOf(profile.birthDate) }
-    var description by remember { mutableStateOf(profile.description) }
-    var photo by remember { mutableStateOf(profile.photo) }
+fun EditProfileContent(viewModel: FarmerProfileViewModel) {
+    val firstName = viewModel.firstName
+    val lastName = viewModel.lastName
+    val birthDate = viewModel.birthDate
+    val photo = viewModel.photo
+    val description = viewModel.description
+    val city = viewModel.city
+    val country = viewModel.country
 
-    val isModified by remember {
-        derivedStateOf {
-            firstName != profile.firstName ||
-                    lastName != profile.lastName ||
-                    birthDate != profile.birthDate ||
-                    description != profile.description ||
-                    photo != profile.photo
-        }
-    }
-
-    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            viewModel.updateProfileWithImage(it, profile.copy(photo = it.toString()))
+            viewModel.updateProfileWithImage(it)
         }
     }
 
@@ -63,7 +52,7 @@ fun EditProfileContent(profile: Profile, viewModel: FarmerProfileViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 72.dp), // Deja espacio para el botón flotante
+                .padding(bottom = 72.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -75,10 +64,9 @@ fun EditProfileContent(profile: Profile, viewModel: FarmerProfileViewModel) {
                         launcher.launch("image/*")
                     }
             ) {
-
                 GlideImage(
                     imageModel = {
-                        if (photo.isBlank()) R.drawable.placeholder else photo
+                        photo.value.ifBlank { R.drawable.placeholder }
                     },
                     modifier = Modifier
                         .fillMaxSize()
@@ -89,7 +77,6 @@ fun EditProfileContent(profile: Profile, viewModel: FarmerProfileViewModel) {
                         alignment = Alignment.Center
                     )
                 )
-
 
                 Box(
                     modifier = Modifier
@@ -112,20 +99,19 @@ fun EditProfileContent(profile: Profile, viewModel: FarmerProfileViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Campos de texto para editar el perfil
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 TextField(
-                    value = firstName,
-                    onValueChange = { firstName = it },
+                    value = firstName.value,
+                    onValueChange = { viewModel.onFirstNameChange(it) },
                     label = { Text("Nombre") },
                     modifier = Modifier.weight(1f)
                 )
                 TextField(
-                    value = lastName,
-                    onValueChange = { lastName = it },
+                    value = lastName.value,
+                    onValueChange = { viewModel.onLastNameChange(it) },
                     label = { Text("Apellido") },
                     modifier = Modifier.weight(1f)
                 )
@@ -134,40 +120,51 @@ fun EditProfileContent(profile: Profile, viewModel: FarmerProfileViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
-                value = birthDate,
-                onValueChange = { birthDate = it },
+                value = birthDate.value,
+                onValueChange = { viewModel.onBirthDateChange(it) },
                 label = { Text("Fecha de nacimiento") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TextField(
+                    value = city.value,
+                    onValueChange = { viewModel.onCityChange(it) },
+                    label = { Text("Ciudad") },
+                    modifier = Modifier.weight(1f)
+                )
+                TextField(
+                    value = country.value,
+                    onValueChange = { viewModel.onCountryChange(it) },
+                    label = { Text("País") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             TextField(
-                value = description,
-                onValueChange = { description = it },
+                value = description.value,
+                onValueChange = { viewModel.onDescriptionChange(it) },
                 label = { Text("Descripción") },
                 modifier = Modifier.fillMaxWidth()
             )
         }
 
-
         Button(
             onClick = {
-                val updatedProfile = profile.copy(
-                    firstName = firstName,
-                    lastName = lastName,
-                    birthDate = birthDate,
-                    description = description,
-                    photo = photo
-                )
-                viewModel.updateFarmerProfile(updatedProfile)
+                viewModel.updateFarmerProfile()
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3E64FF)), // Azul similar al de la imagen
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3E64FF)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .align(Alignment.BottomCenter),
-            enabled = isModified
         ) {
             Text(text = "Guardar", color = Color.White, fontSize = 16.sp)
         }

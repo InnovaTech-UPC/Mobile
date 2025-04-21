@@ -118,4 +118,8 @@ class AdvisorAvailableDatesViewModel(
             }
         }
     }
+
+    fun goToProfile() {
+        navController.navigate(Routes.AdvisorProfile.route)
+    }
 }

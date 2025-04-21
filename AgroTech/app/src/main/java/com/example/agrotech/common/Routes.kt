@@ -4,13 +4,14 @@ sealed class Routes(val route: String) {
     // General
     data object Welcome : Routes("Welcome")
     data object SignIn : Routes("SignIn")
-    data object ForgotPassword : Routes("ForgotPassword")
-    data object RestorePassword : Routes("RestorePassword")
     data object SignUp : Routes("SignUp")
     data object NotificationList : Routes("NotificationList")
     // Farmer
     data object FarmerHome : Routes("FarmerHome")
     data object ReviewList : Routes("ReviewList")
+    data object EnclosureList : Routes("EnclosureList")
+    data object AnimalList : Routes("AnimalList")
+    data object AnimalDetail : Routes("AnimalDetail")
     data object NewAppointment : Routes("NewAppointment")
     data object NewAppointmentConfirmation : Routes("NewAppointmentConfirmation")
     data object FarmerAppointmentList : Routes("FarmerAppointmentList")

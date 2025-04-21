@@ -3,7 +3,6 @@ package com.example.agrotech.presentation.farmerprofile
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,11 +14,12 @@ import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun FarmerProfileScreen(viewModel: FarmerProfileViewModel) {
-    val state = viewModel.state.value
-
     LaunchedEffect(Unit) {
         viewModel.getFarmerProfile()
     }
+
+    val state = viewModel.state.value
+    val isUploadingImage = viewModel.isUploadingImage.value
 
     Scaffold { paddingValues ->
         Column(
@@ -27,7 +27,6 @@ fun FarmerProfileScreen(viewModel: FarmerProfileViewModel) {
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -42,15 +41,10 @@ fun FarmerProfileScreen(viewModel: FarmerProfileViewModel) {
                     )
                 }
                 Text(text = "Editar Perfil", style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold))
-                IconButton(onClick = { /* Opción de menú adicional */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "More"
-                    )
-                }
+                Spacer(modifier = Modifier.size(48.dp)) // layout fix
             }
 
-            if (state.isLoading) {
+            if (state.isLoading || isUploadingImage) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -64,20 +58,25 @@ fun FarmerProfileScreen(viewModel: FarmerProfileViewModel) {
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                state.data?.let { profile ->
-                    EditProfileContent(profile = profile, viewModel = viewModel)
+                state.data?.let {
+                    EditProfileContent(viewModel = viewModel)
                 } ?: run {
-                    state.message?.let { errorMessage ->
+                    state.message.let { errorMessage ->
                         if (errorMessage.isNotBlank()) {
                             AlertDialog(
-                                onDismissRequest = { viewModel.reloadPage() },
+                                onDismissRequest = { viewModel.getFarmerProfile() },
                                 confirmButton = {
-                                    TextButton(onClick = { viewModel.reloadPage() }) {
+                                    TextButton(onClick = { viewModel.getFarmerProfile() }) {
                                         Text("OK")
                                     }
                                 },
                                 title = { Text("Error") },
                                 text = { Text(errorMessage) }
+                            )
+                        } else {
+                            Text(
+                                text = "No se encontraron datos",
+                                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
                             )
                         }
                     }
@@ -86,6 +85,3 @@ fun FarmerProfileScreen(viewModel: FarmerProfileViewModel) {
         }
     }
 }
-
-
-

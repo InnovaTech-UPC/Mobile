@@ -1,4 +1,4 @@
-package com.example.agrotech.presentation.advisorappointments
+package com.example.agrotech.presentation.advisorhistory
 
 
 import androidx.compose.foundation.layout.Box
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -22,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
-import com.example.agrotech.presentation.advisorhistory.AppointmentCardAdvisorList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -32,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.sp
 import com.example.agrotech.common.GlobalVariables
+import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
 
 
 @Composable
@@ -101,8 +100,8 @@ fun AdvisorAppointmentsHistoryScreen(
                         )
                     },
                     onClick = {
-                        // viewModel.goToProfile()
-                        // viewModel.setExpanded(false)
+                        viewModel.goToProfile()
+                        viewModel.setExpanded(false)
                     }
                 )
                 DropdownMenuItem(

@@ -1,6 +1,7 @@
 package com.example.agrotech.presentation.farmerhome
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,14 +40,14 @@ class FarmerHomeViewModel(
     private val _appointmentCard = mutableStateOf(UIState<AppointmentCard>())
     val appointmentCard: State<UIState<AppointmentCard>> get() = _appointmentCard
 
-    private val _notificationCount = mutableStateOf(0)
+    private val _notificationCount = mutableIntStateOf(0)
     val notificationCount: State<Int> get() = _notificationCount
 
     fun getNotificationCount() {
         viewModelScope.launch {
             val result = notificationRepository.getNotifications(GlobalVariables.USER_ID, GlobalVariables.TOKEN)
             if (result is Resource.Success) {
-                _notificationCount.value = result.data?.size ?: 0
+                _notificationCount.intValue = result.data?.size ?: 0
             }
         }
     }
@@ -156,6 +157,10 @@ class FarmerHomeViewModel(
 
     fun goToExplorePosts() {
         navController.navigate(Routes.ExplorePosts.route)
+    }
+
+    fun goToEnclosures() {
+        navController.navigate(Routes.EnclosureList.route)
     }
 
     fun goToAppointmentDetail(appointmentId: Long) {

@@ -2,6 +2,7 @@ package com.example.agrotech.presentation.farmerprofile
 
 import android.net.Uri
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,108 +23,125 @@ class FarmerProfileViewModel(
     private val profileRepository: ProfileRepository,
     private val cloudStorageRepository: CloudStorageRepository
 ) : ViewModel() {
-
     private val _state = mutableStateOf(UIState<Profile>())
     val state: State<UIState<Profile>> get() = _state
 
-    fun goToHome() {
-        _state.value = UIState(data = null)
+    private val _isUploadingImage = mutableStateOf(false)
+    val isUploadingImage: State<Boolean> get() = _isUploadingImage
 
+    private val _profileId = mutableLongStateOf(0)
+
+    private val _firstName = mutableStateOf("")
+    val firstName: State<String> get() = _firstName
+
+    private val _lastName = mutableStateOf("")
+    val lastName: State<String> get() = _lastName
+
+    private val _birthDate = mutableStateOf("")
+    val birthDate: State<String> get() = _birthDate
+
+    private val _description = mutableStateOf("")
+    val description: State<String> get() = _description
+
+    private val _city = mutableStateOf("")
+    val city: State<String> get() = _city
+
+    private val _country = mutableStateOf("")
+    val country: State<String> get() = _country
+
+    private val _photo = mutableStateOf("")
+    val photo: State<String> get() = _photo
+
+    fun goToHome() {
         navController.navigate(Routes.FarmerHome.route)
     }
 
-
     fun getFarmerProfile() {
         _state.value = UIState(isLoading = true)
-
         viewModelScope.launch {
-
             val result = profileRepository.searchProfile(GlobalVariables.USER_ID, GlobalVariables.TOKEN)
             if (result is Resource.Success) {
                 _state.value = UIState(data = result.data)
-
+                _profileId.longValue = result.data?.id ?: 0
+                _firstName.value = result.data?.firstName ?: ""
+                _lastName.value = result.data?.lastName ?: ""
+                _birthDate.value = result.data?.birthDate ?: ""
+                _description.value = result.data?.description ?: ""
+                _city.value = result.data?.city ?: ""
+                _country.value = result.data?.country ?: ""
+                _photo.value = result.data?.photo ?: ""
             } else {
                 _state.value = UIState(message = result.message ?: "Error obteniendo el perfil")
             }
-
         }
     }
 
-    fun updateFarmerProfile(updatedProfile: Profile) {
-
+    fun updateFarmerProfile() {
         _state.value = UIState(isLoading = true)
-
         viewModelScope.launch {
+            val validationError = validateProfileData()
+            if (validationError.isNotBlank()) {
+                _state.value = UIState(message = validationError)
+                return@launch
+            }
 
-                val validationError = validateProfileData(updatedProfile)
-                if (validationError != null) {
-                    _state.value = UIState(message = validationError)
-                    return@launch
-                }
+            val updateProfile = UpdateProfile(
+                firstName = _firstName.value,
+                lastName = _lastName.value,
+                city = _city.value,
+                country = _country.value,
+                birthDate = _birthDate.value,
+                description = _description.value,
+                photo = _photo.value,
+                occupation = "",
+                experience = 0
+            )
 
-                val updateProfile = UpdateProfile(
-                    firstName = updatedProfile.firstName,
-                    lastName = updatedProfile.lastName,
-                    city = updatedProfile.city,
-                    country = updatedProfile.country,
-                    birthDate = updatedProfile.birthDate,
-                    description = updatedProfile.description,
-                    photo = updatedProfile.photo,
-                    occupation = updatedProfile.occupation,
-                    experience = updatedProfile.experience
-                )
-
-                val result = profileRepository.updateProfile(updatedProfile.id, GlobalVariables.TOKEN, updateProfile)
-
-                if (result is Resource.Success) {
-                    _state.value = UIState(data = result.data) // Estado de éxito tras la actualización
-                } else {
-                    _state.value = UIState(message = result.message ?: "Error actualizando el perfil")
-                }
-
-
+            val result = profileRepository.updateProfile(_profileId.longValue, GlobalVariables.TOKEN, updateProfile)
+            _state.value = if (result is Resource.Success) {
+                UIState(data = result.data)
+            } else {
+                UIState(message = result.message ?: "Error actualizando el perfil")
+            }
         }
     }
 
-    private fun validateProfileData(profile: Profile): String? {
-        if (profile.firstName.isBlank()) return "El nombre no puede estar vacío"
-        if (profile.lastName.isBlank()) return "El apellido no puede estar vacío"
-        if (profile.city.isBlank()) return "La ciudad no puede estar vacía"
-        if (profile.country.isBlank()) return "El país no puede estar vacío"
-        if (profile.birthDate.isBlank()) return "La fecha de nacimiento no puede estar vacía"
+    private fun validateProfileData(): String {
+        if (_firstName.value.isBlank()) return "El nombre no puede estar vacío"
+        if (_lastName.value.isBlank()) return "El apellido no puede estar vacío"
+        if (_birthDate.value.isBlank()) return "La fecha de nacimiento no puede estar vacía"
+        if (_description.value.isBlank()) return "La descripción no puede estar vacía"
+        if (_photo.value.isBlank()) return "La foto no puede estar vacía"
+        if (_city.value.isBlank()) return "La ciudad no puede estar vacía"
+        if (_country.value.isBlank()) return "El país no puede estar vacío"
 
-        // Validate date format (yyyy-MM-dd)
         val datePattern = Regex("""\d{4}-\d{2}-\d{2}""")
-        if (!datePattern.matches(profile.birthDate)) return "La fecha de nacimiento debe estar en el formato yyyy-MM-dd"
-
-        if (profile.description.isBlank()) return "La descripción no puede estar vacía"
-        if (profile.photo.isBlank()) return "La foto no puede estar vacía"
-        return null
+        if (!datePattern.matches(_birthDate.value)) return "La fecha debe estar en el formato yyyy-MM-dd"
+        return ""
     }
 
-    fun updateProfileWithImage(imageUri: Uri, profile: Profile) {
-
-        _state.value = UIState(isLoading = true)
-
+    fun updateProfileWithImage(imageUri: Uri) {
+        _isUploadingImage.value = true
         viewModelScope.launch {
             try {
                 val filename = imageUri.lastPathSegment ?: "default_image_name"
                 val imageUrl = cloudStorageRepository.uploadFile(filename, imageUri)
-                val updatedProfile = profile.copy(photo = imageUrl)
-                updateFarmerProfile(updatedProfile)
+                _photo.value = imageUrl
             } catch (e: Exception) {
                 _state.value = UIState(message = "Error uploading image: ${e.message}")
+            } finally {
+                _isUploadingImage.value = false
             }
         }
     }
 
-    fun reloadPage() {
-        _state.value = UIState(data = null)
-        getFarmerProfile()
-    }
-
-
-
+    fun onFirstNameChange(value: String) { _firstName.value = value }
+    fun onLastNameChange(value: String) { _lastName.value = value }
+    fun onBirthDateChange(value: String) { _birthDate.value = value }
+    fun onDescriptionChange(value: String) { _description.value = value }
+    fun onCityChange(value: String) { _city.value = value }
+    fun onCountryChange(value: String) { _country.value = value }
 }
+
 
 

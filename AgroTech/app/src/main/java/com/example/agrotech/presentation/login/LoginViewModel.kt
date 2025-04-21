@@ -86,10 +86,6 @@ class LoginViewModel(
         _password.value = password
     }
 
-    fun goToForgotPasswordScreen() {
-        navController.navigate(Routes.ForgotPassword.route)
-    }
-
     private fun goToAdvisorScreen() {
         navController.navigate(Routes.AdvisorHome.route)
     }

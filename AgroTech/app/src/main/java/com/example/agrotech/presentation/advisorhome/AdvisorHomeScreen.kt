@@ -47,7 +47,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
             onClick = { viewModel.goToAppointmentsAdvisorList() }
         ),
         CardItem(
-            image = painterResource(id = R.drawable.icon_appointments),
+            image = painterResource(id = R.drawable.icon_available_date),
             text = "Mis horarios",
             onClick = { viewModel.goToAvailableDates() }
         )
@@ -63,6 +63,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
     val isExpanded = viewModel.expanded.value
 
     val upcomingAppointments = appointments
+        .filter { it.status == "PENDING" || it.status == "ONGOING" }
         .sortedBy { it.scheduledDate }
         .take(1)
 
@@ -173,15 +174,14 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 .aspectRatio(16f / 9f)
                 .padding(bottom = 16.dp)
         )
-
+        Text(
+            text = "Tu próxima cita",
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge
+        )
         if (advisorId != null && upcomingAppointments.isNotEmpty()) {
-            Text(
-                text = "Tu próxima cita",
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
             AppointmentCardAdvisorList(
                 appointments = upcomingAppointments,
                 farmerNames = farmerNames,
