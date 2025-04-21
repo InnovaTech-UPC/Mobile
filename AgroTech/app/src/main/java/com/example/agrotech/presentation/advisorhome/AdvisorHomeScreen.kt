@@ -174,15 +174,14 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 .aspectRatio(16f / 9f)
                 .padding(bottom = 16.dp)
         )
-
+        Text(
+            text = "Tu próxima cita",
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge
+        )
         if (advisorId != null && upcomingAppointments.isNotEmpty()) {
-            Text(
-                text = "Tu próxima cita",
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
             AppointmentCardAdvisorList(
                 appointments = upcomingAppointments,
                 farmerNames = farmerNames,
