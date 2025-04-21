@@ -57,8 +57,8 @@ fun AdvisorAvailableDatesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true },
-                containerColor = Color(0xFF092C4C), // Color hexadecimal para el fondo
-                contentColor = Color.White // Color blanco para el texto
+                containerColor = Color(0xFF092C4C),
+                contentColor = Color.White
             ) {
                 Text("+")
             }
@@ -143,7 +143,8 @@ fun AdvisorAvailableDatesScreen(
                 items(availableDates ?: emptyList()) { date ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFFBFBFB))
                     ) {
                         Row(
                             modifier = Modifier
@@ -227,7 +228,7 @@ fun AdvisorAvailableDatesScreen(
                             contentColor = Color.White // Texto blanco
                         )
                     ) {
-                        Text("Create")
+                        Text("Crear")
                     }
                 },
                 dismissButton = {
@@ -238,7 +239,7 @@ fun AdvisorAvailableDatesScreen(
                             contentColor = Color.White // Texto blanco
                         )
                     ) {
-                        Text("Cancel")
+                        Text("Cancelar")
                     }
                 }
             )

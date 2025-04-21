@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.agrotech.domain.enclosure.Enclosure
@@ -30,7 +31,10 @@ fun EnclosureListScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.showDialog() }) {
+            FloatingActionButton(onClick = { viewModel.showDialog() },
+                containerColor = Color(0xFF092C4C),
+                contentColor = Color.White
+            ) {
                 Text("+")
             }
         }
@@ -129,12 +133,20 @@ fun EnclosureListScreen(
                     Button(onClick = {
                         viewModel.createEnclosure()
                         viewModel.hideDialog()
-                    }) {
+                    },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF27AE60), // Verde
+                            contentColor = Color.White // Texto blanco
+                        )) {
                         Text("Crear")
                     }
                 },
                 dismissButton = {
-                    Button(onClick = { viewModel.hideDialog() }) {
+                    Button(onClick = { viewModel.hideDialog() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFF84343), // Rojo
+                            contentColor = Color.White // Texto blanco
+                        )) {
                         Text("Cancelar")
                     }
                 }
