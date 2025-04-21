@@ -175,7 +175,7 @@ fun AdvisorAvailableDatesScreen(
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Create Available Date") },
+                title = { Text("Crear Horario Disponible") },
                 text = {
                     Column {
                         OutlinedTextField(
