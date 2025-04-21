@@ -164,7 +164,9 @@ fun EnclosureListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(enclosure.id) },
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFBFBFB))
+
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("🏷️ ${enclosure.name}", fontWeight = FontWeight.Bold)

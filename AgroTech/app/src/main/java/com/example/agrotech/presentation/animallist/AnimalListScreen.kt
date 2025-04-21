@@ -22,6 +22,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -214,7 +215,14 @@ fun AnimalListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(8.dp),
+            .padding(8.dp)
+            .border(
+                width = 1.dp,
+                color = Color.Transparent,
+                shape = RoundedCornerShape(4.dp)
+            ),
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFBFBFB))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("🐮 ${animal.name}", fontWeight = FontWeight.Bold)
