@@ -235,6 +235,10 @@ fun AnimalListItem(
 
 @Composable
 private fun AnimalDialog(viewModel: AnimalListViewModel, healthStatusTranslation: Map<String, String> = mapOf(), enclosureId: Long) {
+    val genderTranslation = mapOf(
+        true to "Macho",
+        false to "Hembra"
+    )
     AlertDialog(
         onDismissRequest = { viewModel.setShowAnimalDialog(false) },
         title = { Text("Añadir Animal") },
@@ -264,6 +268,47 @@ private fun AnimalDialog(viewModel: AnimalListViewModel, healthStatusTranslation
                     label = { Text("Raza") },
                     modifier = Modifier.fillMaxWidth()
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(4.dp))
+                        .clickable { viewModel.setGenderExpanded(true) }
+                        .padding(horizontal = 16.dp, vertical = 20.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val genderText = genderTranslation[viewModel.animalGender] ?: "Género"
+                        Text(
+                            text = genderText,
+                            color = Color.Black
+                        )
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = "Expandir")
+                    }
+
+                    DropdownMenu(
+                        expanded = viewModel.genderExpanded.value,
+                        onDismissRequest = { viewModel.setGenderExpanded(false) }
+                    ) {
+                        DropdownMenuItem(
+                            onClick = {
+                                viewModel.setAnimalGender(true)
+                                viewModel.setGenderExpanded(false)
+                            },
+                            text = { Text("Macho") }
+                        )
+                        DropdownMenuItem(
+                            onClick = {
+                                viewModel.setAnimalGender(false)
+                                viewModel.setGenderExpanded(false)
+                            },
+                            text = { Text("Hembra") }
+                        )
+                    }
+                }
                 OutlinedTextField(
                     value = viewModel.animalWeight.toString(),
                     onValueChange = { viewModel.setAnimalWeight(it.toFloatOrNull() ?: 0f) },

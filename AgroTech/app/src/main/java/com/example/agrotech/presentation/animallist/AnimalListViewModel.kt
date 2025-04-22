@@ -46,6 +46,9 @@ class AnimalListViewModel(
     private val _animalBreed = mutableStateOf("")
     val animalBreed: String get() = _animalBreed.value
 
+    private val _animalGender = mutableStateOf(true)
+    val animalGender: Boolean get() = _animalGender.value
+
     private val _animalWeight = mutableFloatStateOf(0f)
     val animalWeight: Float get() = _animalWeight.floatValue
 
@@ -60,6 +63,9 @@ class AnimalListViewModel(
 
     private val _enclosureType = mutableStateOf("")
     val enclosureType: String get() = _enclosureType.value
+
+    private val _genderExpanded = mutableStateOf(false)
+    val genderExpanded: State<Boolean> get() = _genderExpanded
 
     private val _animalHealthExpanded = mutableStateOf(false)
     val animalHealthExpanded: State<Boolean> get() = _animalHealthExpanded
@@ -123,6 +129,7 @@ class AnimalListViewModel(
                 age = animalAge,
                 species = animalSpecies,
                 breed = animalBreed,
+                gender = animalGender,
                 weight = animalWeight,
                 health = animalHealthStatus
             )
@@ -163,6 +170,10 @@ class AnimalListViewModel(
         _showEnclosureDialog.value = value
     }
 
+    fun setGenderExpanded(value: Boolean) {
+        _genderExpanded.value = value
+    }
+
     fun setAnimalHealthExpanded(value: Boolean) {
         _animalHealthExpanded.value = value
     }
@@ -172,6 +183,7 @@ class AnimalListViewModel(
         _animalAge.intValue = 0
         _animalSpecies.value = ""
         _animalBreed.value = ""
+        _animalGender.value = true
         _animalWeight.floatValue = 0f
         _animalHealthStatus.value = ""
         _enclosureName.value = ""
@@ -183,6 +195,7 @@ class AnimalListViewModel(
     fun setAnimalAge(age: Int) { _animalAge.intValue = age }
     fun setAnimalSpecies(species: String) { _animalSpecies.value = species }
     fun setAnimalBreed(breed: String) { _animalBreed.value = breed }
+    fun setAnimalGender(gender: Boolean) { _animalGender.value = gender }
     fun setAnimalWeight(weight: Float) { _animalWeight.floatValue = weight }
     fun setAnimalHealthStatus(status: String) { _animalHealthStatus.value = status }
     fun setEnclosureName(name: String) { _enclosureName.value = name }
@@ -197,5 +210,4 @@ class AnimalListViewModel(
     private fun validateEnclosure(): Boolean {
         return enclosureName.isNotEmpty() && enclosureCapacity > 0 && enclosureType.isNotEmpty()
     }
-
 }

@@ -36,11 +36,17 @@ class AnimalDetailsViewModel(
     private val _breed = mutableStateOf("")
     val breed: String get() = _breed.value
 
+    private val _gender = mutableStateOf(true)
+    val gender: Boolean get() = _gender.value
+
     private val _weight = mutableFloatStateOf(0f)
     val weight: Float get() = _weight.floatValue
 
     private val _health = mutableStateOf("")
     val health: String get() = _health.value
+
+    private val _genderExpanded = mutableStateOf(false)
+    val genderExpanded: State<Boolean> get() = _genderExpanded
 
     private val _healthStatusExpanded = mutableStateOf(false)
     val healthStatusExpanded: State<Boolean> get() = _healthStatusExpanded
@@ -64,6 +70,7 @@ class AnimalDetailsViewModel(
                 _age.intValue = animal?.age ?: 0
                 _species.value = animal?.species ?: ""
                 _breed.value = animal?.breed ?: ""
+                _gender.value = animal?.gender ?: true
                 _weight.floatValue = animal?.weight ?: 0f
                 _health.value = animal?.health ?: ""
             }
@@ -83,6 +90,7 @@ class AnimalDetailsViewModel(
                 age = _age.intValue,
                 species = _species.value,
                 breed = _breed.value,
+                gender = _gender.value,
                 weight = _weight.floatValue,
                 health = _health.value
             )
@@ -110,6 +118,7 @@ class AnimalDetailsViewModel(
     fun setAge(age: Int) { _age.intValue = age }
     fun setSpecies(species: String) { _species.value = species }
     fun setBreed(breed: String) { _breed.value = breed }
+    fun setGender(gender: Boolean) { _gender.value = gender }
     fun setWeight(weight: Float) { _weight.floatValue = weight }
     fun setHealth(health: String) { _health.value = health }
 
@@ -120,6 +129,10 @@ class AnimalDetailsViewModel(
                 _breed.value.isNotEmpty() &&
                 _weight.floatValue > 0f &&
                 _health.value.isNotEmpty()
+    }
+
+    fun setGenderExpanded(isExpanded: Boolean) {
+        _genderExpanded.value = isExpanded
     }
 
     fun setHealthStatusExpanded(isExpanded: Boolean) {

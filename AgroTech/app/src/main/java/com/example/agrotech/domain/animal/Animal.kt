@@ -9,6 +9,7 @@ class Animal (
     val age: Int,
     val species: String,
     val breed: String,
+    val gender: Boolean,
     val weight: Float,
     val health: String
 )
@@ -20,6 +21,7 @@ fun Animal.toAnimalDto() = AnimalDto(
     age = age,
     species = species,
     breed = breed,
+    gender = gender,
     weight = weight,
     health = health
 )
