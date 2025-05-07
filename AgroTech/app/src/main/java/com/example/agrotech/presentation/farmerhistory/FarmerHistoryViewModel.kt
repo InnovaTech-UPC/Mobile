@@ -11,6 +11,7 @@ import com.example.agrotech.common.Routes
 import com.example.agrotech.common.UIState
 import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.farmer.FarmerRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import java.util.Locale
 
 class FarmerHistoryViewModel(
     private val navController: NavController,
+    private val availableDateRepository: AvailableDateRepository,
     private val profileRepository: ProfileRepository,
     private val advisorRepository: AdvisorRepository,
     private val appointmentRepository: AppointmentRepository,
@@ -42,88 +44,81 @@ class FarmerHistoryViewModel(
         viewModelScope.launch {
             val farmerResult = farmerRepository.searchFarmerByUserId(GlobalVariables.USER_ID, GlobalVariables.TOKEN)
 
-            if (farmerResult is Resource.Success && farmerResult.data != null) {
-                val farmerId = farmerResult.data.id // Si la búsqueda del granjero fue exitosa
-                val result = appointmentRepository.getAppointmentsByFarmer(farmerId, GlobalVariables.TOKEN) // Obtiene las citas del granjero
-
-                if (result is Resource.Success) {
-                    var appointments = result.data?.filter { it.status == "COMPLETED" || it.status == "REVIEWED" }
-
-                    // Aplicar filtro de fecha si se ha proporcionado una fecha seleccionada
-                    if (selectedDate != null) {
-                        val formattedSelectedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate)
-                        appointments = appointments?.filter {
-                            it.scheduledDate.startsWith(formattedSelectedDate)
-                        }
-                    }
-
-                    // Ordenar las citas por fecha (scheduledDate) y luego por hora de inicio (startTime)
-                    appointments = appointments?.sortedWith(
-                        compareBy(
-                            { SimpleDateFormat("yyyy-MM-dd").parse(it.scheduledDate) },
-                            { SimpleDateFormat("HH:mm").parse(it.startTime) }
-                        )
-                    )
-
-                    if (!appointments.isNullOrEmpty()) {
-                        val appointmentCards = mutableListOf<AppointmentCard>()
-                        for (appointment in appointments) {
-                            val advisorResult = advisorRepository.searchAdvisorByAdvisorId(appointment.advisorId, GlobalVariables.TOKEN)
-                            
-                            val advisorName = if (advisorResult is Resource.Success) {
-                                val advisor = advisorResult.data
-                                val profileResult = advisor?.userId?.let { userId ->
-                                    profileRepository.searchProfile(userId, GlobalVariables.TOKEN)
-                                }
-                                if (profileResult is Resource.Success) {
-                                    val profile = profileResult.data
-                                    "${profile?.firstName ?: "Asesor"} ${profile?.lastName ?: "Desconocido"}"
-                                } else {
-                                    "Asesor Desconocido"
-                                }
-                            } else {
-                                "Asesor Desconocido"
-                            }
-
-                            val advisorPhoto = if (advisorResult is Resource.Success) {
-                                val advisor = advisorResult.data
-                                val profileResult = advisor?.userId?.let { userId ->
-                                    profileRepository.searchProfile(userId, GlobalVariables.TOKEN)
-                                }
-                                if (profileResult is Resource.Success) {
-                                    val profile = profileResult.data
-                                    profile?.photo ?: "Asesor Desconocido"
-                                } else {
-                                    "Asesor Desconocido"
-                                }
-                            } else {
-                                "Asesor Desconocido"
-                            }
-
-                            appointmentCards.add(
-                                AppointmentCard(
-                                    id = appointment.id,
-                                    advisorName = advisorName,
-                                    advisorPhoto = advisorPhoto,
-                                    message = appointment.message,
-                                    status = appointment.status,
-                                    scheduledDate = appointment.scheduledDate,
-                                    startTime = appointment.startTime,
-                                    endTime = appointment.endTime,
-                                    meetingUrl = appointment.meetingUrl
-                                )
-                            )
-                        }
-                        _state.value = UIState(data = appointmentCards)
-                    } else {
-                        _state.value = UIState(message = "No se encontraron citas previas")
-                    }
-                } else if (result is Resource.Error) {
-                    _state.value = UIState(message = "Error al intentar obtener las citas")
-                }
-            } else {
+            if (farmerResult !is Resource.Success || farmerResult.data == null) {
                 _state.value = UIState(message = "Error al intentar obtener información del usuario")
+                return@launch
+            }
+
+            val farmerId = farmerResult.data.id
+            val appointmentResult = appointmentRepository.getAppointmentsByFarmer(farmerId, GlobalVariables.TOKEN)
+
+            if (appointmentResult !is Resource.Success || appointmentResult.data == null) {
+                _state.value = UIState(message = "Error al intentar obtener las citas")
+                return@launch
+            }
+
+            // Filtrar citas completadas o revisadas
+            val filteredAppointments = appointmentResult.data.filter {
+                it.status == "COMPLETED" || it.status == "REVIEWED"
+            }
+
+            val appointmentCards = mutableListOf<AppointmentCard>()
+            val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+            for (appointment in filteredAppointments) {
+                // Obtener fecha disponible asociada
+                val availableDateResult = availableDateRepository.getAvailableDateById(appointment.availableDateId, GlobalVariables.TOKEN)
+                val availableDate = (availableDateResult as? Resource.Success)?.data
+
+                if (availableDate == null) continue
+
+                // Filtrar por fecha seleccionada (si aplica)
+                if (selectedDate != null) {
+                    val formattedSelectedDate = dateFormatter.format(selectedDate)
+                    if (!availableDate.scheduledDate.startsWith(formattedSelectedDate)) continue
+                }
+
+                // Obtener nombre y foto del asesor
+                val advisorResult = advisorRepository.searchAdvisorByAdvisorId(availableDate.advisorId, GlobalVariables.TOKEN)
+                val advisor = (advisorResult as? Resource.Success)?.data
+
+                val profile = advisor?.userId?.let { userId ->
+                    val profileResult = profileRepository.searchProfile(userId, GlobalVariables.TOKEN)
+                    (profileResult as? Resource.Success)?.data
+                }
+
+                val advisorName = "${profile?.firstName ?: "Asesor"} ${profile?.lastName ?: "Desconocido"}"
+                val advisorPhoto = profile?.photo ?: "Asesor Desconocido"
+
+                appointmentCards.add(
+                    AppointmentCard(
+                        id = appointment.id,
+                        advisorName = advisorName,
+                        advisorPhoto = advisorPhoto,
+                        message = appointment.message,
+                        status = appointment.status,
+                        scheduledDate = availableDate.scheduledDate,
+                        startTime = availableDate.startTime,
+                        endTime = availableDate.endTime,
+                        meetingUrl = appointment.meetingUrl
+                    )
+                )
+            }
+
+            // Ordenar por fecha y hora
+            val sortedCards = appointmentCards.sortedWith(compareBy(
+                { dateFormatter.parse(it.scheduledDate) },
+                { timeFormatter.parse(it.startTime) }
+            ))
+
+            _state.value = if (sortedCards.isNotEmpty()) {
+                UIState(data = sortedCards)
+            } else {
+                UIState(message = "No se encontraron citas previas")
             }
         }
     }
+
+
 }

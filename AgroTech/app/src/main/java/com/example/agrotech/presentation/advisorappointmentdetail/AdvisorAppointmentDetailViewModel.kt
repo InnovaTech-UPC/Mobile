@@ -9,11 +9,13 @@ import com.example.agrotech.common.GlobalVariables
 import com.example.agrotech.common.Resource
 import com.example.agrotech.common.Routes
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.appointment.ReviewRepository
 import com.example.agrotech.data.repository.authentication.AuthenticationRepository
 import com.example.agrotech.data.repository.farmer.FarmerRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.domain.appointment.Appointment
+import com.example.agrotech.domain.appointment.AvailableDate
 import com.example.agrotech.domain.authentication.AuthenticationResponse
 import com.example.agrotech.domain.profile.Profile
 import kotlinx.coroutines.launch
@@ -21,22 +23,42 @@ import kotlinx.coroutines.launch
 class AdvisorAppointmentDetailViewModel(
     private val navController: NavController,
     private val appointmentRepository: AppointmentRepository,
+    private val availableDateRepository: AvailableDateRepository,
     private val profileRepository: ProfileRepository,
     private val farmerRepository: FarmerRepository,
     private val reviewRepository: ReviewRepository,
     private val authenticationRepository: AuthenticationRepository
 ) : ViewModel() {
 
-    val appointmentDetail = mutableStateOf<Appointment?>(null)
+    private val _expanded = mutableStateOf(false)
+    val expanded: State<Boolean> get() = _expanded
     val isLoading = mutableStateOf(false)
     var errorMessage = mutableStateOf<String?>(null)
 
+
+    val appointmentDetail = mutableStateOf<Appointment?>(null)
     val farmerProfile = mutableStateOf<Profile?>(null)
-
-    private val _expanded = mutableStateOf(false)
-    val expanded: State<Boolean> get() = _expanded
-
     val appointmentReviews = mutableStateOf<Map<Long, Pair<String?, Int?>>>(emptyMap())
+
+    val availableDate = mutableStateOf<AvailableDate?>(null)
+
+    fun loadAvailableDate() {
+        viewModelScope.launch {
+            try {
+                val result = appointmentDetail.value?.let {
+                    availableDateRepository.getAvailableDateById(
+                        it.availableDateId, GlobalVariables.TOKEN)
+                }
+                if (result is Resource.Success) {
+                    availableDate.value = result.data
+                } else {
+                    errorMessage.value = "Error al cargar la fecha disponible"
+                }
+            } catch (e: Exception) {
+                errorMessage.value = "Error: ${e.localizedMessage}"
+            }
+        }
+    }
 
     fun loadAppointmentDetails(appointmentId: Long) {
         viewModelScope.launch {
@@ -74,7 +96,7 @@ class AdvisorAppointmentDetailViewModel(
                 val appointmentResult = appointmentRepository.getAppointmentById(appointmentId, GlobalVariables.TOKEN)
                 if (appointmentResult is Resource.Success) {
                     val appointment = appointmentResult.data
-                    val advisorId = appointment?.advisorId
+                    val advisorId = availableDate.value?.advisorId
                     val farmerId = appointment?.farmerId
 
                     if (advisorId != null && farmerId != null) {

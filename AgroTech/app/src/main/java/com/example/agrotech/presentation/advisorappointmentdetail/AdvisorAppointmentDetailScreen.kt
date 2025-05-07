@@ -34,6 +34,7 @@ fun AdvisorAppointmentDetailScreen(
     LaunchedEffect(appointmentId) {
         viewModel.loadAppointmentDetails(appointmentId)
         viewModel.loadReviewForAppointment(appointmentId)
+        viewModel.loadAvailableDate()
     }
 
     val appointment = viewModel.appointmentDetail.value
@@ -113,9 +114,9 @@ fun AdvisorAppointmentDetailScreen(
                 }
             }
             AdvisorAppointmentDetailCard(
-                appointment = appointment,
                 farmerName = viewModel.farmerProfile.value?.firstName ?: "Nombre no disponible",
-                farmerImageUrl = viewModel.farmerProfile.value?.photo ?: ""
+                farmerImageUrl = viewModel.farmerProfile.value?.photo ?: "",
+                viewModel = viewModel
             )
             Spacer(modifier = Modifier.height(25.dp))
             Text(

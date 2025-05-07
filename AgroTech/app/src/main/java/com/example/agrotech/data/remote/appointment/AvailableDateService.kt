@@ -1,5 +1,6 @@
 package com.example.agrotech.data.remote.appointment
 
+import com.example.agrotech.common.Resource
 import com.example.agrotech.domain.appointment.AvailableDate
 import retrofit2.Response
 import retrofit2.http.Body
@@ -13,8 +14,12 @@ interface AvailableDateService {
     @GET("available_dates")
     suspend fun getAvailableDates(@Header("Authorization") token: String): Response<List<AvailableDateDto>>
 
+    @GET("available_dates/{id}")
+    suspend fun getAvailableDateById(@Path("id") id: Long, @Header("Authorization") token: String): Response<AvailableDateDto>
+
+
     @POST("available_dates")
-    suspend fun createAvailableDate(@Header("Authorization") token: String, @Body availableDate: AvailableDate): Response<AvailableDateDto>
+    suspend fun createAvailableDate(@Header("Authorization") token: String, @Body availableDate: Resource<AvailableDate>): Response<AvailableDateDto>
 
     @DELETE("available_dates/{availableDateId}")
     suspend fun deleteAvailableDate(

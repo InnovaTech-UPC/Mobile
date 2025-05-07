@@ -19,7 +19,6 @@ import androidx.compose.runtime.State
 import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.appointment.ReviewRepository
 import com.example.agrotech.data.repository.notification.NotificationRepository
-import com.example.agrotech.domain.appointment.AvailableDate
 import com.example.agrotech.domain.notification.Notification
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -69,13 +68,21 @@ class FarmerAppointmentDetailViewModel(
     fun getStatusAppointment(appointmentId: Long) {
         viewModelScope.launch {
             val appointmentResult = appointmentRepository.getAppointmentById(appointmentId, GlobalVariables.TOKEN)
+            val availableDateResult = appointmentResult.data?.let {
+                availableDateRepository.getAvailableDateById(
+                    it.availableDateId, GlobalVariables.TOKEN)
+            }
 
             if (appointmentResult is Resource.Success && appointmentResult.data != null) {
                 val appointment = appointmentResult.data
+                val availableDate = availableDateResult?.data
                 _appointmentStatusState.value = appointment
 
                 if (appointment.status == "COMPLETED") {
-                    val reviewResult = reviewRepository.getReviewByAdvisorIdAndFarmerId(appointment.advisorId, appointment.farmerId, GlobalVariables.TOKEN)
+                    val reviewResult = availableDate?.let {
+                        reviewRepository.getReviewByAdvisorIdAndFarmerId(
+                            it.advisorId, appointment.farmerId, GlobalVariables.TOKEN)
+                    }
                     if (reviewResult is Resource.Success && reviewResult.data != null) {
                         navController.navigate(Routes.FarmerAppointmentList.route)
                     }
@@ -104,11 +111,19 @@ class FarmerAppointmentDetailViewModel(
         _isLoading.value = true
         viewModelScope.launch {
             val appointmentResult = appointmentRepository.getAppointmentById(appointmentId, GlobalVariables.TOKEN)
+            val availableDateResult = appointmentResult.data?.let {
+                availableDateRepository.getAvailableDateById(
+                    it.availableDateId, GlobalVariables.TOKEN)
+            }
 
             if (appointmentResult is Resource.Success && appointmentResult.data != null) {
                 val appointment = appointmentResult.data
+                val availableDate = availableDateResult?.data
 
-                val advisorResult = advisorRepository.searchAdvisorByAdvisorId(appointment.advisorId, GlobalVariables.TOKEN)
+                val advisorResult = availableDate?.let {
+                    advisorRepository.searchAdvisorByAdvisorId(
+                        it.advisorId, GlobalVariables.TOKEN)
+                }
                 val advisorName = if (advisorResult is Resource.Success) {
                     val advisor = advisorResult.data
                     val profileResult = advisor?.userId?.let { userId ->
@@ -139,17 +154,19 @@ class FarmerAppointmentDetailViewModel(
                     "Asesor Desconocido"
                 }
 
-                _appointmentDetails.value = AppointmentCard(
-                    id = appointment.id,
-                    advisorName = advisorName,
-                    advisorPhoto = advisorPhoto,
-                    message = appointment.message,
-                    status = appointment.status,
-                    scheduledDate = appointment.scheduledDate,
-                    startTime = appointment.startTime,
-                    endTime = appointment.endTime,
-                    meetingUrl = appointment.meetingUrl
-                )
+                if (availableDate != null) {
+                    _appointmentDetails.value = AppointmentCard(
+                        id = appointment.id,
+                        advisorName = advisorName,
+                        advisorPhoto = advisorPhoto,
+                        message = appointment.message,
+                        status = appointment.status,
+                        scheduledDate = availableDate.scheduledDate,
+                        startTime = availableDate.startTime,
+                        endTime = availableDate.endTime,
+                        meetingUrl = appointment.meetingUrl
+                    )
+                }
 
                 _isLoading.value = false
 
@@ -169,15 +186,12 @@ class FarmerAppointmentDetailViewModel(
         viewModelScope.launch {
             // crear nuevamente el available date
             val appointmentResult = appointmentRepository.getAppointmentById(appointmentId, GlobalVariables.TOKEN)
+
             val availableDate = appointmentResult.data?.let {
-                AvailableDate(
-                    id = 0,
-                    advisorId = it.advisorId,
-                    scheduledDate = it.scheduledDate,
-                    startTime = it.startTime,
-                    endTime = it.endTime
-                )
+                availableDateRepository.getAvailableDateById(
+                    it.availableDateId, GlobalVariables.TOKEN)
             }
+
 
             val result = appointmentRepository.deleteAppointment(appointmentId, GlobalVariables.TOKEN)
 
@@ -186,15 +200,12 @@ class FarmerAppointmentDetailViewModel(
                 val availableDateResult = availableDateRepository.createAvailableDate(GlobalVariables.TOKEN, availableDate!!)
                 if (availableDateResult is Resource.Success) {
 
-
-                    //
-
                     val currentDateTime = Date()
                     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
                     formatter.timeZone = TimeZone.getTimeZone("America/Lima")
                     val formattedDateTime = formatter.format(currentDateTime)
 
-                    val notification = appointmentResult.data?.let {
+                    val notification = availableDateResult.data?.let {
                         Notification(
                             id = 0,
                             userId = GlobalVariables.USER_ID,
@@ -207,24 +218,6 @@ class FarmerAppointmentDetailViewModel(
 
 
                     notificationRepository.createNotification(notification!!, GlobalVariables.TOKEN)
-
-                    /*
-
-                    val advisorResult = advisorRepository.searchAdvisorByAdvisorId(appointmentResult.data?.advisorId!!, GlobalVariables.TOKEN)
-
-                    val notificationAdvisor = appointmentResult.data?.let {
-                        Notification(
-                            id = 0,
-                            userId = advisorResult.data?.userId!!,
-                            title = "Cita cancelada",
-                            message = "La cita programada para el ${it.scheduledDate} a las ${it.startTime} ha sido cancelada por el agricultor. Motivo: $cancelReason",
-                            sendAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()).toString()
-                        )
-                    }
-
-                    notificationRepository.createNotification(notificationAdvisor!!, GlobalVariables.TOKEN)
-
-                    * */
 
 
                     navController.navigate(Routes.CancelAppointmentConfirmation.route)

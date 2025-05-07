@@ -67,13 +67,10 @@ class NewAppointmentViewModel(private val navController: NavController,
             state.value.data?.get(selectedDate.value)?.let { availableDate ->
                 val appointment = Appointment(
                     id = 0,
-                    advisorId = advisorId,
                     farmerId = farmerId,
+                    availableDateId = availableDate.id,
                     message = comment.value,
                     status = "PENDING",
-                    scheduledDate = availableDate.scheduledDate,
-                    startTime = availableDate.startTime,
-                    endTime = availableDate.endTime,
                     meetingUrl = ""
                 )
                 _state.value = UIState(isLoading = true)

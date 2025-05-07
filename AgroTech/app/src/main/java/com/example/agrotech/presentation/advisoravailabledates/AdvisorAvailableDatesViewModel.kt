@@ -107,7 +107,10 @@ class AdvisorAvailableDatesViewModel(
     fun createAvailableDate(createAvailableDate: AvailableDate) {
         viewModelScope.launch {
             try {
-                val response = availableDateRepository.createAvailableDate(GlobalVariables.TOKEN, createAvailableDate)
+                val response = availableDateRepository.createAvailableDate(
+                    GlobalVariables.TOKEN,
+                    Resource.Success(createAvailableDate)
+                )
                 if (response is Resource.Success) {
                     fetchAvailableDates()
                 } else {
@@ -118,6 +121,7 @@ class AdvisorAvailableDatesViewModel(
             }
         }
     }
+
 
     fun goToProfile() {
         navController.navigate(Routes.AdvisorProfile.route)

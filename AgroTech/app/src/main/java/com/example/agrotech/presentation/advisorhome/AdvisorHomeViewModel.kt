@@ -9,11 +9,13 @@ import com.example.agrotech.common.Resource
 import com.example.agrotech.common.Routes
 import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.authentication.AuthenticationRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.data.repository.farmer.FarmerRepository // Importa el repositorio de farmers
 import com.example.agrotech.data.repository.notification.NotificationRepository
 import com.example.agrotech.domain.appointment.Appointment
+import com.example.agrotech.domain.appointment.AvailableDate
 import com.example.agrotech.domain.authentication.AuthenticationResponse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class AdvisorHomeViewModel(
     private val navController: NavController,
+    private val availableDateRepository: AvailableDateRepository,
     private val advisorRepository: AdvisorRepository,
     private val appointmentRepository: AppointmentRepository,
     private val profileRepository: ProfileRepository,
@@ -55,6 +58,29 @@ class AdvisorHomeViewModel(
 
     private val _notificationCount = mutableStateOf(0)
     val notificationCount: State<Int> get() = _notificationCount
+
+    var availableDatesMap by mutableStateOf<Map<Long, AvailableDate>>(emptyMap())
+        private set
+
+    fun loadAvailableDate(appointment: Appointment) {
+        viewModelScope.launch {
+            try {
+                val result = availableDateRepository.getAvailableDateById(appointment.availableDateId, GlobalVariables.TOKEN)
+                if (result is Resource.Success) {
+                    val availableDate = result.data
+                    availableDate?.let {
+                        availableDatesMap = availableDatesMap.toMutableMap().apply {
+                            put(appointment.id, it)
+                        }
+                    }
+                } else {
+                    errorMessage = "Error al cargar la fecha disponible para la cita ${appointment.id}"
+                }
+            } catch (e: Exception) {
+                errorMessage = "Error: ${e.localizedMessage}"
+            }
+        }
+    }
 
     fun getNotificationCount() {
         viewModelScope.launch {

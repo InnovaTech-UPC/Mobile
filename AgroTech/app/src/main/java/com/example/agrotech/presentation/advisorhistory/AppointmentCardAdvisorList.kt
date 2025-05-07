@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.agrotech.domain.appointment.Appointment
+import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
 
 @Composable
 fun AppointmentCardAdvisorList(
     appointments: List<Appointment>,
     farmerNames: Map<Long, String>,
     farmerImagesUrl: Map<Long, String>,
+    viewModel: AdvisorAppointmentsViewModel,
     onAppointmentClick: (Appointment) -> Unit // Pass a lambda for navigation
 ) {
     Column(
@@ -38,6 +40,7 @@ fun AppointmentCardAdvisorList(
                     appointment = appointment,
                     farmerName = farmerName,
                     farmerImageUrl = farmerImageUrl,
+                    viewModel = viewModel,
                     onClick = { onAppointmentClick(appointment) } // Pass the click action
                 )
 

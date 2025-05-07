@@ -96,7 +96,7 @@ class AppointmentRepository(private val appointmentService: AppointmentService) 
         }
         val bearerToken = "Bearer $token"
         val response = appointmentService.createAppointment(bearerToken,
-            CreateAppointment(appointment.advisorId, appointment.farmerId, appointment.message, "PENDING", appointment.scheduledDate, appointment.startTime, appointment.endTime) )
+            CreateAppointment(appointment.farmerId, appointment.availableDateId ,appointment.message) )
         if (response.isSuccessful) {
             response.body()?.let { appointmentDto ->
                 val appointmentCreated = appointmentDto.toAppointment()

@@ -25,8 +25,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.agrotech.R
-import com.example.agrotech.domain.appointment.Appointment
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import java.text.ParseException
@@ -36,9 +36,9 @@ import java.util.Locale
 
 @Composable
 fun AdvisorAppointmentDetailCard(
-    appointment: Appointment,
     farmerName: String,
-    farmerImageUrl: String
+    farmerImageUrl: String,
+    viewModel: AdvisorAppointmentDetailViewModel = viewModel()
 ) {
     Card(
         modifier = Modifier
@@ -95,7 +95,10 @@ fun AdvisorAppointmentDetailCard(
                 )
 
                 Text(
-                    text = "${formatDateShort(appointment.scheduledDate)} (${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)})",
+                    text = "${viewModel.availableDate.value?.let { formatDateShort(it.scheduledDate) }} (${viewModel.availableDate.value?.let {
+                        formatTime(
+                            it.startTime)
+                    }} - ${viewModel.availableDate.value?.let { formatTime(it.endTime) }})",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF06204A)

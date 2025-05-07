@@ -9,10 +9,12 @@ import com.example.agrotech.common.Resource
 import com.example.agrotech.common.Routes
 import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.authentication.AuthenticationRepository
 import com.example.agrotech.data.repository.farmer.FarmerRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.domain.appointment.Appointment
+import com.example.agrotech.domain.appointment.AvailableDate
 import com.example.agrotech.domain.authentication.AuthenticationResponse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 class AdvisorAppointmentsViewModel(
     private val navController: NavController,
     private val authenticationRepository: AuthenticationRepository,
+    private val availableDateRepository: AvailableDateRepository,
     private val advisorRepository: AdvisorRepository,
     private val appointmentRepository: AppointmentRepository,
     private val profileRepository: ProfileRepository,
@@ -39,6 +42,12 @@ class AdvisorAppointmentsViewModel(
     var advisorId by mutableStateOf<Long?>(null)
         private set
 
+
+    val appointmentDetail = mutableStateOf<Appointment?>(null)
+
+    val availableDate = mutableStateOf<AvailableDate?>(null)
+
+
     var isLoading by mutableStateOf(true)
         private set
 
@@ -55,6 +64,24 @@ class AdvisorAppointmentsViewModel(
 
     fun loadAppointmentsCompletedAgain() {
         loadAppointmentsCompleted()
+    }
+
+    fun loadAvailableDate() {
+        viewModelScope.launch {
+            try {
+                val result = appointmentDetail.value?.let {
+                    availableDateRepository.getAvailableDateById(
+                        it.availableDateId, GlobalVariables.TOKEN)
+                }
+                if (result is Resource.Success) {
+                    availableDate.value = result.data
+                } else {
+                    errorMessage = "Error al cargar la fecha disponible"
+                }
+            } catch (e: Exception) {
+                errorMessage = "Error: ${e.localizedMessage}"
+            }
+        }
     }
 
 

@@ -154,19 +154,19 @@ class MainActivity : ComponentActivity() {
                 // View Models
                 val welcomeViewModel = WelcomeViewModel(navController, authenticationRepository, advisorRepository)
                 val loginViewModel = LoginViewModel(navController, authenticationRepository, advisorRepository)
-                val farmerHomeViewModel = FarmerHomeViewModel(navController, profileRepository, authenticationRepository, appointmentRepository, farmerRepository, advisorRepository, notificationRepository)
-                val advisorHomeViewModel = AdvisorHomeViewModel(navController, advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
+                val farmerHomeViewModel = FarmerHomeViewModel(navController, availableDateRepository ,profileRepository, authenticationRepository, appointmentRepository, farmerRepository, advisorRepository, notificationRepository)
+                val advisorHomeViewModel = AdvisorHomeViewModel(navController, availableDateRepository ,advisorRepository, appointmentRepository, profileRepository, farmerRepository, authenticationRepository, notificationRepository)
                 val advisorAvailableDatesViewModel = AdvisorAvailableDatesViewModel(navController, availableDateRepository, advisorRepository, authenticationRepository)
                 val advisorListViewModel = AdvisorListViewModel(navController, profileRepository, advisorRepository)
                 val advisorDetailViewModel = AdvisorDetailViewModel(navController, profileRepository, advisorRepository, availableDateRepository)
-                val advisorAppointmentDetailViewModel = AdvisorAppointmentDetailViewModel(navController, appointmentRepository, profileRepository, farmerRepository, reviewRepository, authenticationRepository)
-                val advisorAppointmentsViewModel = AdvisorAppointmentsViewModel(navController, authenticationRepository, advisorRepository, appointmentRepository, profileRepository, farmerRepository)
+                val advisorAppointmentDetailViewModel = AdvisorAppointmentDetailViewModel(navController, appointmentRepository, availableDateRepository ,profileRepository, farmerRepository, reviewRepository, authenticationRepository)
+                val advisorAppointmentsViewModel = AdvisorAppointmentsViewModel(navController, authenticationRepository, availableDateRepository ,advisorRepository, appointmentRepository, profileRepository, farmerRepository)
                 val reviewListViewModel = ReviewListViewModel(navController, reviewRepository, profileRepository, farmerRepository, advisorRepository)
                 val newAppointmentViewModel = NewAppointmentViewModel(navController, availableDateRepository, appointmentRepository, farmerRepository)
-                val farmerAppointmentListViewModel = FarmerAppointmentListViewModel(navController, profileRepository, advisorRepository, appointmentRepository, farmerRepository)
-                val farmerHistoryViewModel = FarmerHistoryViewModel(navController, profileRepository, advisorRepository, appointmentRepository, farmerRepository)
+                val farmerAppointmentListViewModel = FarmerAppointmentListViewModel(navController, availableDateRepository, appointmentRepository, farmerRepository)
+                val farmerHistoryViewModel = FarmerHistoryViewModel(navController, availableDateRepository, profileRepository, advisorRepository, appointmentRepository, farmerRepository)
                 val farmerAppointmentDetailViewModel = FarmerAppointmentDetailViewModel(navController, appointmentRepository, advisorRepository, profileRepository, reviewRepository, availableDateRepository, notificationRepository)
-                val farmerReviewAdvisorViewModel = FarmerReviewAppointmentViewModel(navController, reviewRepository, appointmentRepository, advisorRepository, profileRepository)
+                val farmerReviewAdvisorViewModel = FarmerReviewAppointmentViewModel(navController, availableDateRepository ,reviewRepository, appointmentRepository, advisorRepository, profileRepository)
                 val createAccountViewModel = CreateAccountViewModel(navController)
                 val createAccountAdvisorViewModel = CreateAccountAdvisorViewModel(navController, authenticationRepository)
                 val createAccountFarmerViewModel = CreateAccountFarmerViewModel(navController, authenticationRepository)
@@ -196,7 +196,7 @@ class MainActivity : ComponentActivity() {
                         FarmerHomeScreen(viewModel = farmerHomeViewModel)
                     }
                     composable(route = Routes.AdvisorHome.route) {
-                        AdvisorHomeScreen(viewModel = advisorHomeViewModel)
+                        AdvisorHomeScreen(viewModel = advisorHomeViewModel, viewModel2 = advisorAppointmentsViewModel)
                     }
                     composable(route = Routes.AdvisorAvailableDates.route) {
                         AdvisorAvailableDatesScreen(viewModel = advisorAvailableDatesViewModel)
@@ -226,7 +226,7 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(route = Routes.AdvisorAppointmentDetail.route + "/{appointmentId}") {
                         val appointmentId = it.arguments?.getString("appointmentId")?.toLong() ?: 0
-                        AdvisorAppointmentDetailScreen(viewModel = advisorAppointmentDetailViewModel, appointmentId = appointmentId)
+                        AdvisorAppointmentDetailScreen(appointmentId = appointmentId, viewModel = advisorAppointmentDetailViewModel)
 
                     }
                     composable(route = Routes.AppointmentsAdvisorHistoryList.route) {

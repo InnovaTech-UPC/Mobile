@@ -124,6 +124,7 @@ fun AdvisorAppointmentsHistoryScreen(
             appointments = appointments,
             farmerNames = farmerNames,
             farmerImagesUrl = farmerImagesUrl,
+            viewModel = viewModel,
             onAppointmentClick = { appointment ->
                 viewModel.goToAppointmentDetails(appointment.id)
             }

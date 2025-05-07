@@ -13,6 +13,7 @@ import com.example.agrotech.common.Routes
 import com.example.agrotech.common.UIState
 import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.authentication.AuthenticationRepository
 import com.example.agrotech.data.repository.farmer.FarmerRepository
 import com.example.agrotech.data.repository.notification.NotificationRepository
@@ -21,9 +22,12 @@ import com.example.agrotech.domain.appointment.Appointment
 import com.example.agrotech.domain.profile.Profile
 import com.example.agrotech.domain.authentication.AuthenticationResponse
 import com.example.agrotech.presentation.farmerhistory.AppointmentCard
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class FarmerHomeViewModel(
     private val navController: NavController,
+    private val availableDateRepository: AvailableDateRepository,
     private val profileRepository: ProfileRepository,
     private val authenticationRepository: AuthenticationRepository,
     private val appointmentRepository: AppointmentRepository,
@@ -77,8 +81,19 @@ class FarmerHomeViewModel(
                 return@launch
             }
 
-            val advisorProfile = fetchAdvisorProfile(appointment.advisorId) ?: run {
+
+            // Obtener AvailableDate relacionado con la cita
+            val availableDateResult = availableDateRepository.getAvailableDateById(appointment.availableDateId, GlobalVariables.TOKEN)
+            val availableDate = (availableDateResult as? Resource.Success)?.data
+
+
+            val advisorProfile = availableDate?.let { fetchAdvisorProfile(it.advisorId) } ?: run {
                 _appointmentCard.value = UIState(message = "Error advisor profile not found")
+                return@launch
+            }
+
+            if (availableDate == null) {
+                _appointmentCard.value = UIState(message = "Error retrieving available date")
                 return@launch
             }
 
@@ -88,15 +103,16 @@ class FarmerHomeViewModel(
                 advisorPhoto = advisorProfile.photo,
                 message = appointment.message,
                 status = appointment.status,
-                scheduledDate = appointment.scheduledDate,
-                startTime = appointment.startTime,
-                endTime = appointment.endTime,
+                scheduledDate = availableDate.scheduledDate,
+                startTime = availableDate.startTime,
+                endTime = availableDate.endTime,
                 meetingUrl = appointment.meetingUrl
             )
 
             _appointmentCard.value = UIState(data = appointmentCard)
         }
     }
+
 
     private suspend fun fetchFarmerId(): Long? {
         val farmerResult = farmerRepository.searchFarmerByUserId(
@@ -108,9 +124,22 @@ class FarmerHomeViewModel(
 
     private suspend fun fetchPendingAppointment(farmerId: Long): Appointment? {
         val appointmentResult = appointmentRepository.getAppointmentsByFarmer(farmerId, GlobalVariables.TOKEN)
+
         val appointments = (appointmentResult as? Resource.Success)?.data
-        return appointments?.filter { it.status == "PENDING" }
-            ?.minByOrNull { it.scheduledDate }
+            ?.filter { it.status == "PENDING" }
+
+        if (appointments.isNullOrEmpty()) {
+            _appointmentCard.value = UIState(message = "No pending appointments")
+            return null
+        }
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        return appointments.minByOrNull { appointment ->
+            val availableDateResult = availableDateRepository.getAvailableDateById(appointment.availableDateId, GlobalVariables.TOKEN)
+            val scheduledDate = (availableDateResult as? Resource.Success)?.data?.scheduledDate
+            scheduledDate?.let { dateFormat.parse(it)?.time } ?: Long.MAX_VALUE
+        }
     }
 
     private suspend fun fetchAdvisorProfile(advisorId: Long): Profile? {

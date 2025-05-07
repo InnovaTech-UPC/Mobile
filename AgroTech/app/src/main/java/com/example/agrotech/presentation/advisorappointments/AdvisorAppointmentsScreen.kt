@@ -46,7 +46,8 @@ fun AdvisorAppointmentsScreen(
 
     LaunchedEffect(GlobalVariables.USER_ID, GlobalVariables.TOKEN) {
         if (GlobalVariables.USER_ID != 0L && GlobalVariables.TOKEN.isNotBlank()) {
-            viewModel.loadAppointmentsAgain() // deberías exponer una función pública en el VM para volver a cargar
+            viewModel.loadAppointmentsAgain()
+            viewModel.loadAvailableDate()
         }
     }
 
@@ -133,6 +134,7 @@ fun AdvisorAppointmentsScreen(
             appointments = appointments,
             farmerNames = farmerNames,
             farmerImagesUrl = farmerImagesUrl,
+            viewModel = viewModel,
             onAppointmentClick = { appointment ->
                 viewModel.goToAppointmentDetails(appointment.id)
             }

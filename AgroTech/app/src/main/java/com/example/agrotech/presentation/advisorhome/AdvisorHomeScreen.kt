@@ -23,13 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.agrotech.R
+import com.example.agrotech.presentation.advisorappointments.AdvisorAppointmentsViewModel
 import com.example.agrotech.presentation.advisorhistory.AppointmentCardAdvisorList
 import com.example.agrotech.presentation.navigationcard.CardItem
 import com.example.agrotech.presentation.navigationcard.NavigationCard
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @Composable
-fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
+fun AdvisorHomeScreen(
+    viewModel: AdvisorHomeViewModel = viewModel(),
+    viewModel2: AdvisorAppointmentsViewModel = viewModel(),
+    ) {
     LaunchedEffect(Unit) {
         viewModel.loadData()
         viewModel.getNotificationCount()
@@ -62,11 +68,14 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
     val errorMessage = viewModel.errorMessage
     val isExpanded = viewModel.expanded.value
 
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     val upcomingAppointments = appointments
         .filter { it.status == "PENDING" || it.status == "ONGOING" }
-        .sortedBy { it.scheduledDate }
+        .sortedBy { appointment ->
+            viewModel.availableDatesMap[appointment.availableDateId]?.scheduledDate?.let { dateFormat.parse(it)?.time }
+        }
         .take(1)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -186,6 +195,7 @@ fun AdvisorHomeScreen(viewModel: AdvisorHomeViewModel = viewModel()) {
                 appointments = upcomingAppointments,
                 farmerNames = farmerNames,
                 farmerImagesUrl = farmerImagesUrl,
+                viewModel = viewModel2,
                 onAppointmentClick = { appointment ->
                     viewModel.goToAppointmentDetails(appointment.id)
                 }

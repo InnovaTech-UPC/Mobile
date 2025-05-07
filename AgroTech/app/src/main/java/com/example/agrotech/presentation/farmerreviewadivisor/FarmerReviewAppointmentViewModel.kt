@@ -11,6 +11,7 @@ import com.example.agrotech.common.Resource
 import com.example.agrotech.common.UIState
 import com.example.agrotech.data.repository.advisor.AdvisorRepository
 import com.example.agrotech.data.repository.appointment.AppointmentRepository
+import com.example.agrotech.data.repository.appointment.AvailableDateRepository
 import com.example.agrotech.data.repository.profile.ProfileRepository
 import com.example.agrotech.data.repository.appointment.ReviewRepository
 import com.example.agrotech.domain.appointment.Review
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class FarmerReviewAppointmentViewModel(
     private val navController: NavController,
+    private val availableDateRepository: AvailableDateRepository,
     private val reviewRepository: ReviewRepository,
     private val appointmentRepository: AppointmentRepository,
     private val advisorRepository: AdvisorRepository,
@@ -62,15 +64,23 @@ class FarmerReviewAppointmentViewModel(
         viewModelScope.launch {
 
             val appointmentResult = appointmentRepository.getAppointmentById(appointmentId, GlobalVariables.TOKEN)
+            val availableDateResult = appointmentResult.data?.let {
+                availableDateRepository.getAvailableDateById(
+                    it.availableDateId, GlobalVariables.TOKEN)
+            }
 
             if (appointmentResult is Resource.Success && appointmentResult.data != null) {
 
                 val appointment = appointmentResult.data
-                val advisorId = appointment.advisorId
+                val availableDate = availableDateResult?.data
+                val advisorId = availableDate?.advisorId
 
                 Log.d("FarmerReviewAppointmentViewModel", "AdvisorId: $advisorId, farmerId: ${appointment.farmerId}")
 
-                val reviewResult = reviewRepository.getReviewByAdvisorIdAndFarmerId(advisorId, appointment.farmerId, GlobalVariables.TOKEN)
+                val reviewResult = availableDate?.let {
+                    reviewRepository.getReviewByAdvisorIdAndFarmerId(
+                        it.advisorId, appointment.farmerId, GlobalVariables.TOKEN)
+                }
 
                 if (reviewResult is Resource.Success && reviewResult.data != null) {
                     val review = reviewResult.data
@@ -88,10 +98,13 @@ class FarmerReviewAppointmentViewModel(
                 }
 
 
-                val advisorResult = advisorRepository.searchAdvisorByAdvisorId(advisorId, GlobalVariables.TOKEN)
+                val advisorResult = availableDate?.let {
+                    advisorRepository.searchAdvisorByAdvisorId(
+                        it.advisorId, GlobalVariables.TOKEN)
+                }
                 if (advisorResult is Resource.Success && advisorResult.data != null) {
                     val advisor = advisorResult.data
-                    val profileResult = advisor.userId?.let { userId ->
+                    val profileResult = advisor.userId.let { userId ->
                         profileRepository.searchProfile(userId, GlobalVariables.TOKEN)
                     }
 
@@ -121,10 +134,14 @@ class FarmerReviewAppointmentViewModel(
 
         viewModelScope.launch {
             val appointmentResult = appointmentRepository.getAppointmentById(appointmentId, GlobalVariables.TOKEN)
+            val availableDateResult = appointmentResult.data?.let {
+                availableDateRepository.getAvailableDateById(
+                    it.availableDateId, GlobalVariables.TOKEN)
+            }
 
             if (appointmentResult is Resource.Success) {
                 val appointment = appointmentResult.data
-                val advisorId = appointment?.advisorId ?: 0L
+                val advisorId = availableDateResult?.data?.advisorId ?: 0L
                 val farmerId = appointment?.farmerId ?: 0L
 
                 val review = Review(
