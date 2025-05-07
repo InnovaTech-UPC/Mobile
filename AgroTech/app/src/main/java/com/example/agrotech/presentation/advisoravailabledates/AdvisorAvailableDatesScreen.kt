@@ -153,7 +153,7 @@ fun AdvisorAvailableDatesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                Text(text = "📅 Fecha: ${date.availableDate}")
+                                Text(text = "📅 Fecha: ${date.scheduledDate}")
                                 Text(text = "🕒 Desde: ${date.startTime}")
                                 Text(text = "🕓 Hasta: ${date.endTime}")
                             }
@@ -215,7 +215,7 @@ fun AdvisorAvailableDatesScreen(
                                 val newDate = AvailableDate(
                                     id = 0L,
                                     advisorId = advisorId,
-                                    availableDate = availableDateInput.text,
+                                    scheduledDate = availableDateInput.text, // Cambiado a scheduledDate
                                     startTime = startTimeInput.text,
                                     endTime = endTimeInput.text
                                 )

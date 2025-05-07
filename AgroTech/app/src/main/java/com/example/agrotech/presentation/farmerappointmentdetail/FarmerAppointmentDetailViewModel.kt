@@ -173,7 +173,7 @@ class FarmerAppointmentDetailViewModel(
                 AvailableDate(
                     id = 0,
                     advisorId = it.advisorId,
-                    availableDate = it.scheduledDate,
+                    scheduledDate = it.scheduledDate,
                     startTime = it.startTime,
                     endTime = it.endTime
                 )

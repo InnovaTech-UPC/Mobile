@@ -71,7 +71,7 @@ class NewAppointmentViewModel(private val navController: NavController,
                     farmerId = farmerId,
                     message = comment.value,
                     status = "PENDING",
-                    scheduledDate = availableDate.availableDate,
+                    scheduledDate = availableDate.scheduledDate,
                     startTime = availableDate.startTime,
                     endTime = availableDate.endTime,
                     meetingUrl = ""

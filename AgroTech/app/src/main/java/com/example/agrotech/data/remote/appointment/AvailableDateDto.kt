@@ -5,9 +5,9 @@ import com.example.agrotech.domain.appointment.AvailableDate
 data class AvailableDateDto(
     val id: Long,
     val advisorId: Long,
-    val availableDate: String,
+    val scheduledDate: String,
     val startTime: String,
     val endTime: String,
 )
 
-fun AvailableDateDto.toAvailableDate() = AvailableDate(id, advisorId, availableDate, startTime, endTime)
+fun AvailableDateDto.toAvailableDate() = AvailableDate(id, advisorId, scheduledDate, startTime, endTime)

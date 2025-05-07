@@ -106,7 +106,7 @@ fun NewAppointmentScreen(viewModel: NewAppointmentViewModel, advisorId: Long) {
                                 value = if (selectedDate == -1) {
                                     "Seleccione una fecha"
                                 } else {
-                                    state.data?.let { "${it[selectedDate].availableDate} - ${it[selectedDate].startTime} a ${it[selectedDate].endTime}" }?: "Fecha no disponible"
+                                    state.data?.let { "${it[selectedDate].scheduledDate} - ${it[selectedDate].startTime} a ${it[selectedDate].endTime}" }?: "Fecha no disponible"
                                 },
                                 onValueChange = { /* Do nothing */ },
                                 readOnly = true
@@ -117,7 +117,7 @@ fun NewAppointmentScreen(viewModel: NewAppointmentViewModel, advisorId: Long) {
                             ) {
                                 state.data?.forEachIndexed { index, date ->
                                     DropdownMenuItem(
-                                        text = { Text(text = "${date.availableDate} - ${date.startTime} a ${date.endTime}") },
+                                        text = { Text(text = "${date.scheduledDate} - ${date.startTime} a ${date.endTime}") },
                                         onClick = {
                                             viewModel.setSelectedDate(index)
                                             viewModel.toggleExpanded()
