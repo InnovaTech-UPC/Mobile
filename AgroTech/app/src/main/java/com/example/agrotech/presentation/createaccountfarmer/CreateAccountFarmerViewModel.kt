@@ -36,6 +36,13 @@ class CreateAccountFarmerViewModel(
     var country = mutableStateOf("")
         private set
 
+    var isTermsAccepted = mutableStateOf(false)
+        private set
+
+    fun toggleTermsAccepted() {
+        isTermsAccepted.value = !isTermsAccepted.value
+    }
+
     // Function to create a Profile object with the current values
     fun getProfile(): CreateProfile {
         return CreateProfile(
@@ -72,6 +79,11 @@ class CreateAccountFarmerViewModel(
     }
 
     fun signUp() {
+        if (!isTermsAccepted.value) {
+            _snackbarMessage.value = "Debe aceptar los términos y condiciones para continuar"
+            return
+        }
+
         viewModelScope.launch {
             _state.value = UIState(isLoading = true)
             val emailValue = email.value

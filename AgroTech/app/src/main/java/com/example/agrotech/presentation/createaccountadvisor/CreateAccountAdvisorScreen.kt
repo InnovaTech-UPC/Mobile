@@ -24,10 +24,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import com.example.agrotech.R
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
 import java.util.Calendar
 import java.util.Locale
 
@@ -207,7 +210,28 @@ fun CreateAccountAdvisorScreen(viewModel: CreateAccountAdvisorViewModel) {
                     }
                 }
                 Spacer(modifier = Modifier.height(35.dp))
-
+                Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = viewModel.isTermsAccepted.value,
+                            onCheckedChange = { viewModel.toggleTermsAccepted() }
+                        )
+                        Text(
+                            text = buildAnnotatedString {
+                                append("Acepto los ")
+                                withStyle(style = SpanStyle(color = Color.Blue, textDecoration = TextDecoration.Underline)) {
+                                    append("términos y condiciones")
+                                }
+                            },
+                            modifier = Modifier.clickable {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://innovatech-upc.github.io/Landing/saas.html"))
+                                context.startActivity(intent)
+                            },
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(35.dp))
                 // Botón de Continuar
                 Box(
                     modifier = Modifier
